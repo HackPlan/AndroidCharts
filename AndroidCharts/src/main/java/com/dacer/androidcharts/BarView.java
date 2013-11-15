@@ -10,8 +10,6 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-import dacer.utils.MyUtils;
-
 /**
  * Created by Dacer on 11/11/13.
  */

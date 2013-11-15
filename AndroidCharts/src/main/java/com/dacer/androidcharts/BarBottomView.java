@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import dacer.utils.MyUtils;
 
 /**
  * Created by Dacer on 11/12/13.

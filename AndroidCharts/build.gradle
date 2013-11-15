@@ -21,7 +21,7 @@ android {
         targetSdkVersion 18
     }
     release {
-        runProguard true
+        runProguard false
         proguardFile 'proguard-rules.txt'
         proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
     }

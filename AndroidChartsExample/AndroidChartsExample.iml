@@ -3,39 +3,52 @@
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
-        <option name="SELECTED_BUILD_VARIANT" value="Debug" />
-        <option name="ASSEMBLE_TASK_NAME" value="bundleDebug" />
-        <option name="COMPILE_JAVA_TASK_NAME" value="compileDebug" />
-        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleTest" />
-        <option name="SOURCE_GEN_TASK_NAME" value="generateDebugSources" />
+        <option name="SELECTED_BUILD_VARIANT" value="DefaultFlavorDebug" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleDefaultFlavorDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileDefaultFlavorDebug" />
+        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleDefaultFlavorTest" />
+        <option name="SOURCE_GEN_TASK_NAME" value="generateDefaultFlavorDebugSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
         <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
-        <option name="LIBRARY_PROJECT" value="true" />
       </configuration>
     </facet>
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
-        <option name="GRADLE_PROJECT_PATH" value=":AndroidCharts" />
+        <option name="GRADLE_PROJECT_PATH" value=":AndroidChartsExample" />
       </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/build/classes/debug" />
+    <output url="file://$MODULE_DIR$/build/classes/defaultFlavor/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/build/source/r/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/debug" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/r/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/test" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/r/defaultFlavor/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/defaultFlavor/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/defaultFlavor/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/defaultFlavor/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/defaultFlavor/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/r/defaultFlavor/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/defaultFlavor/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/defaultFlavor/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/defaultFlavor/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/defaultFlavor/test" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavor/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavor/assets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavor/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavor/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavor/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavor/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavor/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestDefaultFlavor/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestDefaultFlavor/assets" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestDefaultFlavor/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestDefaultFlavor/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestDefaultFlavor/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestDefaultFlavor/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestDefaultFlavor/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/aidl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/java" isTestSource="false" />
@@ -71,6 +84,8 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 18 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="android-support-v4" level="project" />
+    <orderEntry type="module" module-name="AndroidCharts-AndroidCharts" exported="" />
   </component>
 </module>
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AndroidChartsExample</string>
+    <string name="title_section1">Line Chart</string>
+    <string name="title_section2">Bar Chart</string>
+    <string name="title_section3">Clock Pie View</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+</resources>

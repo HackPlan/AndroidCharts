@@ -1,1 +1,1 @@
-include ':AndroidCharts'
+include ':AndroidCharts', ':AndroidChartsExample'
