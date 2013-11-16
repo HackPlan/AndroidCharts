@@ -16,8 +16,6 @@ import java.util.ArrayList;
  */
 public class LineFragment extends Fragment {
 
-    int temp = 1;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,7 +37,8 @@ public class LineFragment extends Fragment {
         ArrayList<String> test = new ArrayList<String>();
         int randomint = (int)(Math.random()*30+1);
         for (int i=0; i<randomint; i++){
-            test.add(String.valueOf(i+1));
+//            test.add(String.valueOf(i+1));
+            test.add("党委会");
         }
         lineView.setBottomStringList(test);
 
@@ -48,20 +47,6 @@ public class LineFragment extends Fragment {
         for (int i=0; i<randomint; i++){
             dataList.add((int)(Math.random()*random));
         }
-        lineView.setDataList(dataList);
-    }
-
-    private void regularSet(LineView lineView){
-        ArrayList<String> test = new ArrayList<String>();
-        for (int i=0; i<temp; i++){
-            test.add(String.valueOf(i+1));
-        }
-        lineView.setBottomStringList(test);
-        ArrayList<Integer> dataList = new ArrayList<Integer>();
-        for (int i=0; i<temp; i++){
-            dataList.add(i);
-        }
-        temp++;
         lineView.setDataList(dataList);
     }
 

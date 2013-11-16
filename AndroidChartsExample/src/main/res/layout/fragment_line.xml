@@ -4,13 +4,12 @@
     android:background="#ffffff">
 
     <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:id="@+id/horizontalScrollView"
         android:layout_alignParentRight="true"
         android:layout_above="@+id/line_button"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_below="@+id/textView2">
+        android:layout_margin="22dp">
     <view
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
@@ -24,22 +23,6 @@
         android:text="Random"
         android:id="@+id/line_button"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Text"
-        android:id="@+id/textView"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Some Text"
-        android:id="@+id/textView2"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

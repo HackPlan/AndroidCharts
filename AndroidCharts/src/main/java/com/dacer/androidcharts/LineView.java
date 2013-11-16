@@ -29,11 +29,12 @@ public class LineView extends View {
 
     //drawBackground
     private boolean autoSetDataOfGird = true;
+    private boolean autoSetGridWidth = true;
     private int biggestData = 0;
     private int dataOfAGird = 10;
     private int bottomTextHeight = 0;
     private int bottomTextSize;
-    private final int backgroundGridWidth;
+    private int backgroundGridWidth;
 //    private float backgroundGridHeight;
     private int horizontalGridNum;
     private ArrayList<String> bottomStringList;
@@ -50,6 +51,8 @@ public class LineView extends View {
                                //-+-+-
     private final int bottomLineLength;
     private final int bottomTextTopMargin;
+    private final int bottomTextBottomMargin;
+
     //popup
     private Rect popupTextRect = new Rect();
     private Paint popupTextPaint = new Paint();
@@ -85,6 +88,7 @@ public class LineView extends View {
         DOT_INNER_CIR_RADIUS = MyUtils.dip2px(mContext, 2);
         DOT_OUTER_CIR_RADIUS = MyUtils.dip2px(mContext,5);
         MIN_TOP_LINE_LENGTH = MyUtils.dip2px(mContext,12);
+        bottomTextBottomMargin = bottomTextSize;
 
         popupTextPaint.setAntiAlias(true);
         popupTextPaint.setColor(Color.WHITE);
@@ -112,12 +116,20 @@ public class LineView extends View {
             horizontalGridNum = MIN_HORIZONTAL_GRID_NUM;
         }
         Rect r = new Rect();
+        int longestWidth = 0;
         for(String s:bottomStringList){
             bottomTextPaint.getTextBounds(s,0,s.length(),r);
             if(bottomTextHeight<r.height()){
                 bottomTextHeight = r.height();
             }
+            if(autoSetGridWidth&&(longestWidth<r.width())){
+                longestWidth = r.width();
+            }
         }
+        if(autoSetGridWidth&&(backgroundGridWidth<longestWidth)){
+            backgroundGridWidth = longestWidth;
+        }
+
         refreshView();
     }
 
@@ -166,14 +178,16 @@ public class LineView extends View {
         }else{
             topLineLength = MIN_TOP_LINE_LENGTH;
         }
+
         xCoordinateList.clear();
         yCoordinateList.clear();
         for(int i=0;i<(horizontalGridNum+1);i++){
             xCoordinateList.add(sideLineLength + backgroundGridWidth*i);
         }
         for(int i=0;i<(verticalGridNum+1);i++){
-            yCoordinateList.add(topLineLength + ((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
-                    bottomLineLength)*i/(verticalGridNum)));
+            yCoordinateList.add(topLineLength +
+                    ((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
+                    bottomLineLength-bottomTextBottomMargin)*i/(verticalGridNum)));
         }
 
         drawDotList = new ArrayList<Dot>();
@@ -282,7 +296,11 @@ public class LineView extends View {
 
         //draw vertical lines
         for(int i=0;i<xCoordinateList.size();i++){
-            canvas.drawLine(xCoordinateList.get(i), 0, xCoordinateList.get(i), mViewHeight - bottomTextTopMargin - bottomTextHeight, paint);
+            canvas.drawLine(xCoordinateList.get(i),
+                    0,
+                    xCoordinateList.get(i),
+                    mViewHeight - bottomTextTopMargin - bottomTextHeight-bottomTextBottomMargin,
+                    paint);
         }
 
         //draw dotted lines
@@ -301,7 +319,7 @@ public class LineView extends View {
         if(bottomStringList != null){
             for(int i=0;i<bottomStringList.size();i++){
                 canvas.drawText(bottomStringList.get(i), sideLineLength+backgroundGridWidth*i,
-                        mViewHeight, bottomTextPaint);
+                        mViewHeight-bottomTextBottomMargin, bottomTextPaint);
             }
         }
     }
@@ -371,18 +389,6 @@ public class LineView extends View {
         int x;
         int y;
         int data;
-        
-        Dot(Point point,int data){
-            this.x = point.x;
-            this.y = point.y;
-            this.data = data;
-        }
-        
-        Dot(int x,int y,int data){
-            this.x = x;
-            this.y = y;
-            this.data = data;
-        }
 
         Dot(int x,int y,Integer data){
             this.x = x;
