@@ -28,10 +28,11 @@ public class LineView extends View {
     private Context mContext;
 
     //drawBackground
+    private int dateOfAGird = 50;
     private int bottomTextHeight = 0;
     private int bottomTextSize;
     private int backgroundGridWidth;
-    private int backgroundGridHeight;
+//    private float backgroundGridHeight;
     private int horizontalGridNum;
     private ArrayList<String> bottomStringList;
     private ArrayList<Integer> dataList;
@@ -45,7 +46,8 @@ public class LineView extends View {
 
     private int topLineLength; // | | ← this
                                //-+-+-
-    private int bottomTextTopMargin;
+    private final int bottomLineLength;
+    private final int bottomTextTopMargin;
     //popup
     private Rect popupTextRect = new Rect();
     private Paint popupTextPaint = new Paint();
@@ -56,6 +58,9 @@ public class LineView extends View {
     private int popupBottomMargin;
 
     //Constants
+    private final int DOT_INNER_CIR_RADIUS;
+    private final int DOT_OUTER_CIR_RADIUS;
+
     private final int MIN_VERTICAL_GRID_NUM = 4;
     private final int MIN_HORIZONTAL_GRID_NUM = 1;
     private final int BACKGROUND_LINE_COLOR = Color.parseColor("#EEEEEE");
@@ -73,7 +78,10 @@ public class LineView extends View {
         sideLineLength = backgroundGridWidth/3*2;
         bottomTextSize = MyUtils.sp2px(mContext,12);
         bottomTextTopMargin = MyUtils.sp2px(mContext,5);
-        verticalGridNum = MIN_VERTICAL_GRID_NUM;
+        bottomLineLength = MyUtils.sp2px(mContext, 22);
+        topLineLength = MyUtils.dip2px(mContext, 12);
+        DOT_INNER_CIR_RADIUS = MyUtils.dip2px(mContext, 2);
+        DOT_OUTER_CIR_RADIUS = MyUtils.dip2px(mContext,5);
 
         popupTextPaint.setAntiAlias(true);
         popupTextPaint.setColor(Color.WHITE);
@@ -119,6 +127,7 @@ public class LineView extends View {
     }
 
     private void refreshView(){
+        verticalGridNum = MIN_VERTICAL_GRID_NUM;
         if(dataList != null && !dataList.isEmpty()){
             for(Integer integer:dataList){
                 if(verticalGridNum<(integer+1)){
@@ -131,21 +140,26 @@ public class LineView extends View {
         // But this code not so good.
         if((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin)/
                 (verticalGridNum+2)<getPopupHeight()){
-            topLineLength = getPopupHeight();
+            topLineLength = getPopupHeight()+DOT_OUTER_CIR_RADIUS+DOT_INNER_CIR_RADIUS;
         }else{
             topLineLength = MyUtils.dip2px(mContext,12);
         }
 
-        backgroundGridHeight = (mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin)/
-                (verticalGridNum+1);
+//        backgroundGridHeight = (mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
+//                        bottomLineLength)/(verticalGridNum);
 
+        TempLog.show("lineHeight : "+(mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
+                bottomLineLength));
+
+        TempLog.show("verticalGridNum : " + verticalGridNum);
         xCoordinateList.clear();
         yCoordinateList.clear();
         for(int i=0;i<(horizontalGridNum+1);i++){
-            xCoordinateList.add(sideLineLength+backgroundGridWidth*i);
+            xCoordinateList.add(sideLineLength + backgroundGridWidth*i);
         }
         for(int i=0;i<(verticalGridNum+1);i++){
-            yCoordinateList.add(topLineLength + backgroundGridHeight * i);
+            yCoordinateList.add(topLineLength + (int)((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
+                    bottomLineLength)*i/(verticalGridNum)));
         }
 
         drawPointList = new ArrayList<Point>();
@@ -221,8 +235,8 @@ public class LineView extends View {
         smallCirPaint.setColor(Color.parseColor("#FFFFFF"));
         if(drawPointList!=null && !drawPointList.isEmpty()){
             for(Point p : drawPointList){
-                canvas.drawCircle(p.x,p.y,MyUtils.dip2px(mContext,5),bigCirPaint);
-                canvas.drawCircle(p.x, p.y, MyUtils.dip2px(mContext, 2), smallCirPaint);
+                canvas.drawCircle(p.x,p.y,DOT_OUTER_CIR_RADIUS,bigCirPaint);
+                canvas.drawCircle(p.x, p.y,DOT_INNER_CIR_RADIUS, smallCirPaint);
             }
         }
     }
@@ -252,21 +266,21 @@ public class LineView extends View {
                 new float[]{10,5,10,5}, 1);
 
         //draw vertical lines
-        Path linePath = new Path();
         for(int i=0;i<xCoordinateList.size();i++){
-            linePath.moveTo(xCoordinateList.get(i), 0);
-            linePath.lineTo(xCoordinateList.get(i),(verticalGridNum+1)*backgroundGridHeight+topLineLength);
+            canvas.drawLine(xCoordinateList.get(i), 0, xCoordinateList.get(i), mViewHeight - bottomTextTopMargin - bottomTextHeight, paint);
         }
-        canvas.drawPath(linePath, paint);
 
         //draw dotted lines
         paint.setPathEffect(effects);
         Path dottedPath = new Path();
         for(int i=0;i<yCoordinateList.size();i++){
-            dottedPath.moveTo(0, yCoordinateList.get(i));
-            dottedPath.lineTo(getWidth(), yCoordinateList.get(i));
+            if((yCoordinateList.size()-1-i)%dateOfAGird == 0){
+                dottedPath.moveTo(0, yCoordinateList.get(i));
+                dottedPath.lineTo(getWidth(), yCoordinateList.get(i));
+//                canvas.drawLine(0,yCoordinateList.get(i),getWidth(),yCoordinateList.get(i),paint);
+                canvas.drawPath(dottedPath, paint);
+            }
         }
-        canvas.drawPath(dottedPath, paint);
 
         //draw bottom text
         if(bottomStringList != null){
@@ -291,7 +305,7 @@ public class LineView extends View {
     }
 
     private int measureHeight(int measureSpec){
-        int preferred = backgroundGridHeight*(verticalGridNum+2)+bottomTextSize/2+topLineLength;
+        int preferred = 0;
         return getMeasurement(measureSpec, preferred);
     }
 

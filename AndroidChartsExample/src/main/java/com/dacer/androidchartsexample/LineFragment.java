@@ -25,7 +25,7 @@ public class LineFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_line, container, false);
         final LineView lineView = (LineView)rootView.findViewById(R.id.line_view);
-        regularSet(lineView);
+        set(lineView);
 
         Button lineButton = (Button)rootView.findViewById(R.id.line_button);
         lineButton.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +62,19 @@ public class LineFragment extends Fragment {
             dataList.add(i);
         }
         temp++;
+        lineView.setDataList(dataList);
+    }
+
+    private void set(LineView lineView){
+        ArrayList<String> test = new ArrayList<String>();
+        for (int i=0; i<40; i++){
+            test.add(String.valueOf(i+1));
+        }
+        lineView.setBottomStringList(test);
+        ArrayList<Integer> dataList = new ArrayList<Integer>();
+        dataList.add(20);
+        dataList.add(599);
+
         lineView.setDataList(dataList);
     }
 }
