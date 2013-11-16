@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.dacer.androidcharts.LineView;
 import com.dacer.androidcharts.SimpleDate;
+import com.dacer.androidcharts.TempLog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,27 +26,29 @@ public class LineFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_line, container, false);
         final LineView lineView = (LineView)rootView.findViewById(R.id.line_view);
-        set(lineView);
+        randomSet(lineView);
 
         Button lineButton = (Button)rootView.findViewById(R.id.line_button);
         lineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                regularSet(lineView);
+                randomSet(lineView);
             }
         });
         return rootView;
     }
 
-    private void ramdomSet(LineView lineView){
+    private void randomSet(LineView lineView){
         ArrayList<String> test = new ArrayList<String>();
-        for (int i=0; i<20; i++){
+        int randomint = (int)(Math.random()*10+1);
+        for (int i=0; i<randomint; i++){
             test.add(String.valueOf(i+1));
         }
         lineView.setBottomStringList(test);
+
         ArrayList<Integer> dataList = new ArrayList<Integer>();
         int random = (int)(Math.random()*10+1);
-        for (int i=0; i<20; i++){
+        for (int i=0; i<randomint; i++){
             dataList.add((int)(Math.random()*random));
         }
         lineView.setDataList(dataList);

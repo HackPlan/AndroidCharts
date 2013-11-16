@@ -28,10 +28,10 @@ public class LineView extends View {
     private Context mContext;
 
     //drawBackground
-    private int dateOfAGird = 50;
+    private int dateOfAGird = 1;
     private int bottomTextHeight = 0;
     private int bottomTextSize;
-    private int backgroundGridWidth;
+    private final int backgroundGridWidth;
 //    private float backgroundGridHeight;
     private int horizontalGridNum;
     private ArrayList<String> bottomStringList;
@@ -98,10 +98,11 @@ public class LineView extends View {
     }
 
     /**
-     *
+     * dataList will be reset when called is method.
      * @param bottomStringList The String ArrayList in the bottom.
      */
     public void setBottomStringList(ArrayList<String> bottomStringList){
+        this.dataList = null;
         this.bottomStringList = bottomStringList;
         horizontalGridNum = bottomStringList.size()-1;
         if(horizontalGridNum<MIN_HORIZONTAL_GRID_NUM){
@@ -119,10 +120,15 @@ public class LineView extends View {
 
     /**
      *
-     * @param dataList 汇总每天的数据的一个ArrayList，第0位为第一天.
+     * @param dataList The Integer ArrayList for showing,
+     *                 dataList.size() must < bottomStringList.size()
      */
     public void setDataList(ArrayList<Integer> dataList){
         this.dataList = dataList;
+        if(dataList.size() > bottomStringList.size()){
+            throw new RuntimeException("dacer.LineView error:" +
+                    " dataList.size() > bottomStringList.size() !!!");
+        }
         refreshView();
     }
 
@@ -144,29 +150,22 @@ public class LineView extends View {
         }else{
             topLineLength = MyUtils.dip2px(mContext,12);
         }
-
-//        backgroundGridHeight = (mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
-//                        bottomLineLength)/(verticalGridNum);
-
-        TempLog.show("lineHeight : "+(mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
-                bottomLineLength));
-
-        TempLog.show("verticalGridNum : " + verticalGridNum);
         xCoordinateList.clear();
         yCoordinateList.clear();
         for(int i=0;i<(horizontalGridNum+1);i++){
             xCoordinateList.add(sideLineLength + backgroundGridWidth*i);
         }
         for(int i=0;i<(verticalGridNum+1);i++){
-            yCoordinateList.add(topLineLength + (int)((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
+            yCoordinateList.add(topLineLength + ((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
                     bottomLineLength)*i/(verticalGridNum)));
         }
 
         drawPointList = new ArrayList<Point>();
         if(dataList != null && !dataList.isEmpty()){
             for(int i=0;i<dataList.size();i++){
-                drawPointList.add(new Point(xCoordinateList.get(i), yCoordinateList.
-                        get(verticalGridNum - dataList.get(i))));
+                int x = xCoordinateList.get(i);
+                int y = yCoordinateList.get(verticalGridNum - dataList.get(i));
+                drawPointList.add(new Point(x, y));
             }
         }
 
