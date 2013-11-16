@@ -28,7 +28,9 @@ public class LineView extends View {
     private Context mContext;
 
     //drawBackground
-    private int dateOfAGird = 1;
+    private boolean autoSetDataOfGird = true;
+    private int biggestData = 0;
+    private int dataOfAGird = 10;
     private int bottomTextHeight = 0;
     private int bottomTextSize;
     private final int backgroundGridWidth;
@@ -129,6 +131,19 @@ public class LineView extends View {
             throw new RuntimeException("dacer.LineView error:" +
                     " dataList.size() > bottomStringList.size() !!!");
         }
+        if(autoSetDataOfGird){
+            biggestData = 0;
+            for(Integer i:dataList){
+                if(biggestData<i){
+                    biggestData = i;
+                }
+            }
+            dataOfAGird = 1;
+            while(biggestData/10 > dataOfAGird){
+                dataOfAGird *= 10;
+            }
+        }
+        
         refreshView();
     }
 
@@ -146,7 +161,7 @@ public class LineView extends View {
         // But this code not so good.
         if((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin)/
                 (verticalGridNum+2)<getPopupHeight()){
-            topLineLength = getPopupHeight()+DOT_OUTER_CIR_RADIUS+DOT_INNER_CIR_RADIUS;
+            topLineLength = getPopupHeight()+DOT_OUTER_CIR_RADIUS+DOT_INNER_CIR_RADIUS+2;
         }else{
             topLineLength = MyUtils.dip2px(mContext,12);
         }
@@ -273,7 +288,7 @@ public class LineView extends View {
         paint.setPathEffect(effects);
         Path dottedPath = new Path();
         for(int i=0;i<yCoordinateList.size();i++){
-            if((yCoordinateList.size()-1-i)%dateOfAGird == 0){
+            if((yCoordinateList.size()-1-i)%dataOfAGird == 0){
                 dottedPath.moveTo(0, yCoordinateList.get(i));
                 dottedPath.lineTo(getWidth(), yCoordinateList.get(i));
 //                canvas.drawLine(0,yCoordinateList.get(i),getWidth(),yCoordinateList.get(i),paint);

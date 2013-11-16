@@ -26,7 +26,7 @@ public class LineFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_line, container, false);
         final LineView lineView = (LineView)rootView.findViewById(R.id.line_view);
-        randomSet(lineView);
+        set(lineView);
 
         Button lineButton = (Button)rootView.findViewById(R.id.line_button);
         lineButton.setOnClickListener(new View.OnClickListener() {
@@ -40,14 +40,14 @@ public class LineFragment extends Fragment {
 
     private void randomSet(LineView lineView){
         ArrayList<String> test = new ArrayList<String>();
-        int randomint = (int)(Math.random()*10+1);
+        int randomint = (int)(Math.random()*30+1);
         for (int i=0; i<randomint; i++){
             test.add(String.valueOf(i+1));
         }
         lineView.setBottomStringList(test);
 
         ArrayList<Integer> dataList = new ArrayList<Integer>();
-        int random = (int)(Math.random()*10+1);
+        int random = (int)(Math.random()*999+1);
         for (int i=0; i<randomint; i++){
             dataList.add((int)(Math.random()*random));
         }
@@ -75,8 +75,8 @@ public class LineFragment extends Fragment {
         }
         lineView.setBottomStringList(test);
         ArrayList<Integer> dataList = new ArrayList<Integer>();
-        dataList.add(20);
-        dataList.add(599);
+        dataList.add(2);
+        dataList.add(99);
 
         lineView.setDataList(dataList);
     }
