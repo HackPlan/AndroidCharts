@@ -8,11 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.dacer.androidcharts.LineView;
-import com.dacer.androidcharts.SimpleDate;
-import com.dacer.androidcharts.TempLog;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created by Dacer on 11/15/13.

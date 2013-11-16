@@ -63,7 +63,7 @@ public class MainActivity extends Activity
                 break;
             case 2:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, new LineFragment())
+                        .replace(R.id.container, new ClockPieFragment())
                         .commit();
                 break;
         }

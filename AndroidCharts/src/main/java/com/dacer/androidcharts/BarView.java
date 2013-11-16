@@ -15,16 +15,15 @@ import java.util.ArrayList;
  */
 public class BarView extends View {
     private ArrayList<Integer> dataList;
-
     private Paint bgPaint;
-    private Paint redPaint;
+    private Paint fgPaint;
     private Rect rect;
     private int mViewWidth;
     private int mViewHeight;
     private int barWidth;
     private int topMargin;
-    private final int GRAY_COLOR = Color.parseColor("#F6F6F6");
-    private final int RED_COLOR = Color.parseColor("#FC496D");
+    private final int BACKGROUND_COLOR = Color.parseColor("#F6F6F6");
+    private final int FOREGROUND_COLOR = Color.parseColor("#FC496D");
 
 
 
@@ -35,19 +34,11 @@ public class BarView extends View {
         super(context, attrs);
         bgPaint = new Paint();
         bgPaint.setAntiAlias(true);
-        bgPaint.setColor(GRAY_COLOR);
-        redPaint = new Paint(bgPaint);
-        redPaint.setColor(RED_COLOR);
+        bgPaint.setColor(BACKGROUND_COLOR);
+        fgPaint = new Paint(bgPaint);
+        fgPaint.setColor(FOREGROUND_COLOR);
         rect = new Rect();
         topMargin = MyUtils.dip2px(context,5);
-
-        if(isInEditMode()){
-            ArrayList<Integer> barDataList = new ArrayList<Integer>();
-            for(int i=0; i<7; i++){
-                barDataList.add((int)(Math.random() * 100));
-            }
-            setDataList(barDataList);
-        }
     }
 
     /**
@@ -64,12 +55,12 @@ public class BarView extends View {
         for(int i=1; i<8; i++){
             rect.set(barWidth*(2*i-1),topMargin,barWidth*2*i,mViewHeight);
             canvas.drawRect(rect,bgPaint);
-            if(dataList != null || !dataList.isEmpty()){
+            if(dataList != null && !dataList.isEmpty()){
                 rect.set(barWidth*(2*i-1),
                         topMargin+(mViewHeight-topMargin)*dataList.get(i-1)/100,
                         barWidth*2*i,
                         mViewHeight);
-                canvas.drawRect(rect,redPaint);
+                canvas.drawRect(rect,fgPaint);
             }
         }
     }
@@ -94,16 +85,13 @@ public class BarView extends View {
 
     private int getMeasurement(int measureSpec, int preferred){
         int specSize = MeasureSpec.getSize(measureSpec);
-        int measurement = 0;
+        int measurement;
 
         switch(MeasureSpec.getMode(measureSpec)){
             case MeasureSpec.EXACTLY:
-                // This means the width of this view has been given.
                 measurement = specSize;
                 break;
             case MeasureSpec.AT_MOST:
-                // Take the minimum of the preferred size and what
-                // we were told to be.
                 measurement = Math.min(preferred, specSize);
                 break;
             default:

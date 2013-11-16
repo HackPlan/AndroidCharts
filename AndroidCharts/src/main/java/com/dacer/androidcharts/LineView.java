@@ -62,7 +62,7 @@ public class LineView extends View {
     //Constants
     private final int DOT_INNER_CIR_RADIUS;
     private final int DOT_OUTER_CIR_RADIUS;
-
+    private final int MIN_TOP_LINE_LENGTH;
     private final int MIN_VERTICAL_GRID_NUM = 4;
     private final int MIN_HORIZONTAL_GRID_NUM = 1;
     private final int BACKGROUND_LINE_COLOR = Color.parseColor("#EEEEEE");
@@ -84,6 +84,7 @@ public class LineView extends View {
         topLineLength = MyUtils.dip2px(mContext, 12);
         DOT_INNER_CIR_RADIUS = MyUtils.dip2px(mContext, 2);
         DOT_OUTER_CIR_RADIUS = MyUtils.dip2px(mContext,5);
+        MIN_TOP_LINE_LENGTH = MyUtils.dip2px(mContext,12);
 
         popupTextPaint.setAntiAlias(true);
         popupTextPaint.setColor(Color.WHITE);
@@ -163,7 +164,7 @@ public class LineView extends View {
                 (verticalGridNum+2)<getPopupHeight()){
             topLineLength = getPopupHeight()+DOT_OUTER_CIR_RADIUS+DOT_INNER_CIR_RADIUS+2;
         }else{
-            topLineLength = MyUtils.dip2px(mContext,12);
+            topLineLength = MIN_TOP_LINE_LENGTH;
         }
         xCoordinateList.clear();
         yCoordinateList.clear();
