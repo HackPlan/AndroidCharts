@@ -40,7 +40,7 @@ public class LineView extends View {
     private ArrayList<Integer> dataList;
     private ArrayList<Integer> xCoordinateList = new ArrayList<Integer>();
     private ArrayList<Integer> yCoordinateList = new ArrayList<Integer>();
-    private ArrayList<Point> drawPointList;
+    private ArrayList<Dot> drawDotList;
     private Paint bottomTextPaint = new Paint();
     private int verticalGridNum; // only include the grid with 4 borders
     private int sideLineLength;  // --+--+--+--+--+--+--
@@ -55,7 +55,7 @@ public class LineView extends View {
     private Paint popupTextPaint = new Paint();
     private int bottomTriangleHeight = 12;
     private boolean showPopup = false;
-    private Point selectedPoint;
+    private Dot selectedDot;
     private int popupTopPadding;
     private int popupBottomMargin;
 
@@ -176,12 +176,12 @@ public class LineView extends View {
                     bottomLineLength)*i/(verticalGridNum)));
         }
 
-        drawPointList = new ArrayList<Point>();
+        drawDotList = new ArrayList<Dot>();
         if(dataList != null && !dataList.isEmpty()){
             for(int i=0;i<dataList.size();i++){
                 int x = xCoordinateList.get(i);
                 int y = yCoordinateList.get(verticalGridNum - dataList.get(i));
-                drawPointList.add(new Point(x, y));
+                drawDotList.add(new Dot(x,y,dataList.get(i)));
             }
         }
 
@@ -196,10 +196,10 @@ public class LineView extends View {
         drawBackgroundLines(canvas);
         drawLines(canvas);
         drawDots(canvas);
-        if(showPopup && selectedPoint != null){
+        if(showPopup && selectedDot != null){
             drawPopup(canvas,
-                    String.valueOf(verticalGridNum - yCoordinateList.indexOf(selectedPoint.y)),
-                    selectedPoint);
+                    String.valueOf(selectedDot.data),
+                    selectedDot.getPoint());
         }
     }
 
@@ -248,10 +248,10 @@ public class LineView extends View {
         bigCirPaint.setColor(Color.parseColor("#FF0033"));
         Paint smallCirPaint = new Paint(bigCirPaint);
         smallCirPaint.setColor(Color.parseColor("#FFFFFF"));
-        if(drawPointList!=null && !drawPointList.isEmpty()){
-            for(Point p : drawPointList){
-                canvas.drawCircle(p.x,p.y,DOT_OUTER_CIR_RADIUS,bigCirPaint);
-                canvas.drawCircle(p.x, p.y,DOT_INNER_CIR_RADIUS, smallCirPaint);
+        if(drawDotList!=null && !drawDotList.isEmpty()){
+            for(Dot dot : drawDotList){
+                canvas.drawCircle(dot.x,dot.y,DOT_OUTER_CIR_RADIUS,bigCirPaint);
+                canvas.drawCircle(dot.x,dot.y,DOT_INNER_CIR_RADIUS,smallCirPaint);
             }
         }
     }
@@ -348,11 +348,11 @@ public class LineView extends View {
         point.y = (int) event.getY();
         Region r = new Region();
         int width = backgroundGridWidth/2;
-        if(drawPointList != null || !drawPointList.isEmpty()){
-            for(Point p : drawPointList){
-                r.set(p.x-width,p.y-width,p.x+width,p.y+width);
+        if(drawDotList != null || !drawDotList.isEmpty()){
+            for(Dot dot : drawDotList){
+                r.set(dot.x-width,dot.y-width,dot.x+width,dot.y+width);
                 if (r.contains(point.x,point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
-                    selectedPoint = p;
+                    selectedDot = dot;
                 }else if (event.getAction() == MotionEvent.ACTION_UP){
                     if (r.contains(point.x,point.y)){
                         showPopup = true;
@@ -365,5 +365,33 @@ public class LineView extends View {
             postInvalidate();
         }
         return true;
+    }
+
+    class Dot{
+        int x;
+        int y;
+        int data;
+        
+        Dot(Point point,int data){
+            this.x = point.x;
+            this.y = point.y;
+            this.data = data;
+        }
+        
+        Dot(int x,int y,int data){
+            this.x = x;
+            this.y = y;
+            this.data = data;
+        }
+
+        Dot(int x,int y,Integer data){
+            this.x = x;
+            this.y = y;
+            this.data = data;
+        }
+
+        Point getPoint(){
+            return new Point(x,y);
+        }
     }
 }

@@ -73,7 +73,7 @@ public class LineFragment extends Fragment {
         lineView.setBottomStringList(test);
         ArrayList<Integer> dataList = new ArrayList<Integer>();
         dataList.add(2);
-        dataList.add(99);
+        dataList.add(9999);
 
         lineView.setDataList(dataList);
     }
