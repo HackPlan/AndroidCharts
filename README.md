@@ -33,3 +33,15 @@ PieView pieView = (PieView)findViewById(R.id.pie_view);
 ArrayList<PieHelper> pieHelperArrayList = new ArrayList<PieHelper>();
 pieView.setDate(pieHelperArrayList);
 ```
+
+## License
+
+* MIT License
+
+## Contributing
+
+Please fork this repository and contribute back using
+[pull requests](https://github.com/github/android/pulls).
+
+Any contributions, large or small, major features, bug fixes, additional
+language translations, unit/integration tests are welcomed
