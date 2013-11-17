@@ -11,6 +11,7 @@ import com.dacer.androidcharts.BarView;
 import com.dacer.androidcharts.LineView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Dacer on 11/15/13.
