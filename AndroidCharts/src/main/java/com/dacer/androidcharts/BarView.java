@@ -15,13 +15,22 @@ import java.util.ArrayList;
  */
 public class BarView extends View {
     private ArrayList<Integer> dataList;
+    private Paint textPaint;
     private Paint bgPaint;
     private Paint fgPaint;
     private Rect rect;
-    private int mViewWidth;
-    private int mViewHeight;
     private int barWidth;
+//    private boolean showSideMargin = true;
+    private int bottomTextDescent;
+    private boolean autoSetWidth = true;
     private int topMargin;
+    private int bottomTextHeight;
+    private ArrayList<String> bottomTextList;
+    private int textSize;
+    private final int MINI_BAR_WIDTH;
+    private final int BAR_SIDE_MARGIN;
+    private final int TEXT_TOP_MARGIN;
+    private final int TEXT_COLOR = Color.parseColor("#9B9A9B");
     private final int BACKGROUND_COLOR = Color.parseColor("#F6F6F6");
     private final int FOREGROUND_COLOR = Color.parseColor("#FC496D");
 
@@ -38,7 +47,44 @@ public class BarView extends View {
         fgPaint = new Paint(bgPaint);
         fgPaint.setColor(FOREGROUND_COLOR);
         rect = new Rect();
-        topMargin = MyUtils.dip2px(context,5);
+        topMargin = MyUtils.dip2px(context, 5);
+        textSize = MyUtils.sp2px(context, 15);
+        barWidth = MyUtils.dip2px(context,22);
+        MINI_BAR_WIDTH = MyUtils.dip2px(context,22);
+        BAR_SIDE_MARGIN  = MyUtils.dip2px(context,22);
+        TEXT_TOP_MARGIN = MyUtils.dip2px(context, 5);
+        textPaint = new Paint();
+        textPaint.setAntiAlias(true);
+        textPaint.setColor(TEXT_COLOR);
+        textPaint.setTextSize(textSize);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+    }
+
+    /**
+     * dataList will be reset when called is method.
+     * @param bottomStringList The String ArrayList in the bottom.
+     */
+    public void setBottomTextList(ArrayList<String> bottomStringList){
+        this.dataList = null;
+        this.bottomTextList = bottomStringList;
+
+        Rect r = new Rect();
+        bottomTextDescent = 0;
+        barWidth = MINI_BAR_WIDTH;
+        for(String s:bottomTextList){
+            textPaint.getTextBounds(s,0,s.length(),r);
+            if(bottomTextHeight<r.height()){
+                bottomTextHeight = r.height();
+            }
+            if(autoSetWidth&&(barWidth<r.width())){
+                barWidth = r.width();
+            }
+            if(bottomTextDescent<(Math.abs(r.bottom))){
+                bottomTextDescent = Math.abs(r.bottom);
+            }
+        }
+        setMinimumWidth(2);
+        postInvalidate();
     }
 
     /**
@@ -47,46 +93,62 @@ public class BarView extends View {
      */
     public void setDataList(ArrayList<Integer> dataList){
         this.dataList = dataList;
+        setMinimumWidth(2);
         postInvalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        for(int i=1; i<8; i++){
-            rect.set(barWidth*(2*i-1),topMargin,barWidth*2*i,mViewHeight);
-            canvas.drawRect(rect,bgPaint);
-            if(dataList != null && !dataList.isEmpty()){
-                rect.set(barWidth*(2*i-1),
-                        topMargin+(mViewHeight-topMargin)*dataList.get(i-1)/100,
-                        barWidth*2*i,
-                        mViewHeight);
+        int i = 1;
+        if(dataList != null && !dataList.isEmpty()){
+            for(Integer integer:dataList){
+                rect.set(BAR_SIDE_MARGIN*i+barWidth*(i-1),
+                        topMargin,
+                        (BAR_SIDE_MARGIN+barWidth)* i,
+                        getHeight()-bottomTextHeight-TEXT_TOP_MARGIN);
+                canvas.drawRect(rect,bgPaint);
+                rect.set(BAR_SIDE_MARGIN*i+barWidth*(i-1),
+                        topMargin+(getHeight()-topMargin)*integer/100,
+                        (BAR_SIDE_MARGIN+barWidth)* i,
+                        getHeight()-bottomTextHeight-TEXT_TOP_MARGIN);
                 canvas.drawRect(rect,fgPaint);
+                i++;
+            }
+        }
+
+        if(bottomTextList != null && !bottomTextList.isEmpty()){
+            i = 1;
+            for(String s:bottomTextList){
+                canvas.drawText(s,BAR_SIDE_MARGIN*i+barWidth*(i-1)+barWidth/2,
+                        getHeight()-bottomTextDescent,textPaint);
+                i++;
             }
         }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        mViewWidth = measureWidth(widthMeasureSpec);
-        mViewHeight = measureHeight(heightMeasureSpec);
-        barWidth = mViewWidth/14;
+        int mViewWidth = measureWidth(widthMeasureSpec);
+        int mViewHeight = measureHeight(heightMeasureSpec);
         setMeasuredDimension(mViewWidth,mViewHeight);
     }
 
     private int measureWidth(int measureSpec){
-        int preferred = 3;
+        int preferred = 0;
+        if(bottomTextList != null){
+            preferred = bottomTextList.size()*(barWidth+BAR_SIDE_MARGIN)+BAR_SIDE_MARGIN;
+        }
         return getMeasurement(measureSpec, preferred);
     }
 
     private int measureHeight(int measureSpec){
-        int preferred = 600;
+        int preferred = 222;
         return getMeasurement(measureSpec, preferred);
     }
 
     private int getMeasurement(int measureSpec, int preferred){
         int specSize = MeasureSpec.getSize(measureSpec);
         int measurement;
-
         switch(MeasureSpec.getMode(measureSpec)){
             case MeasureSpec.EXACTLY:
                 measurement = specSize;
@@ -98,9 +160,7 @@ public class BarView extends View {
                 measurement = preferred;
                 break;
         }
-
         return measurement;
     }
-
-
+    
 }

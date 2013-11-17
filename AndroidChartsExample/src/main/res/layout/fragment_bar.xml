@@ -4,23 +4,20 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="#ffffff">
 
-    <view
+    <HorizontalScrollView
         android:layout_width="fill_parent"
-        android:layout_height="300dp"
-        class="com.dacer.androidcharts.BarView"
-        android:id="@+id/bar_view"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <view
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        class="com.dacer.androidcharts.BarBottomView"
-        android:id="@+id/view2"
-        android:layout_below="@+id/bar_view"
-        android:layout_centerHorizontal="true"
-        android:layout_alignLeft="@+id/bar_view"
-        android:layout_alignRight="@+id/bar_view" />
+        android:id="@+id/horizontalScrollView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            class="com.dacer.androidcharts.BarView"
+            android:id="@+id/bar_view" />
+        </HorizontalScrollView>
+
+
 
     <Button
         android:layout_width="wrap_content"

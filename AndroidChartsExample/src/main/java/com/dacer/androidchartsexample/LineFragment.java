@@ -37,10 +37,9 @@ public class LineFragment extends Fragment {
         ArrayList<String> test = new ArrayList<String>();
         int randomint = (int)(Math.random()*30+1);
         for (int i=0; i<randomint; i++){
-//            test.add(String.valueOf(i+1));
-            test.add("党委会");
+            test.add(String.valueOf(i+1));
         }
-        lineView.setBottomStringList(test);
+        lineView.setBottomTextList(test);
 
         ArrayList<Integer> dataList = new ArrayList<Integer>();
         int random = (int)(Math.random()*999+1);
@@ -55,7 +54,7 @@ public class LineFragment extends Fragment {
         for (int i=0; i<40; i++){
             test.add(String.valueOf(i+1));
         }
-        lineView.setBottomStringList(test);
+        lineView.setBottomTextList(test);
         ArrayList<Integer> dataList = new ArrayList<Integer>();
         dataList.add(2);
         dataList.add(9999);

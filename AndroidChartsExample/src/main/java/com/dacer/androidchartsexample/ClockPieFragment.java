@@ -28,6 +28,7 @@ public class ClockPieFragment extends Fragment {
                 randomSet(pieView);
             }
         });
+        randomSet(pieView);
         return rootView;
     }
 

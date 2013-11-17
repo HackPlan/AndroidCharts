@@ -27,12 +27,22 @@ public class BarFragment extends Fragment {
                 randomSet(barView);
             }
         });
+        randomSet(barView);
         return rootView;
     }
 
     private void randomSet(BarView barView){
+        int random = (int)(Math.random()*20);
+        ArrayList<String> test = new ArrayList<String>();
+        for (int i=0; i<random; i++){
+            test.add("test");
+            test.add("pqg");
+//            test.add(String.valueOf(i+1));
+        }
+        barView.setBottomTextList(test);
+
         ArrayList<Integer> barDataList = new ArrayList<Integer>();
-        for(int i=0; i<7; i++){
+        for(int i=0; i<random*2; i++){
             barDataList.add((int)(Math.random() * 100));
         }
         barView.setDataList(barDataList);

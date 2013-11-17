@@ -37,7 +37,7 @@ public class LineView extends View {
     private int backgroundGridWidth;
 //    private float backgroundGridHeight;
     private int horizontalGridNum;
-    private ArrayList<String> bottomStringList;
+    private ArrayList<String> bottomTextList;
     private ArrayList<Integer> dataList;
     private ArrayList<Integer> xCoordinateList = new ArrayList<Integer>();
     private ArrayList<Integer> yCoordinateList = new ArrayList<Integer>();
@@ -51,7 +51,7 @@ public class LineView extends View {
                                //-+-+-
     private final int bottomLineLength;
     private final int bottomTextTopMargin;
-    private final int bottomTextBottomMargin;
+    private int bottomTextDescent;
 
     //popup
     private Rect popupTextRect = new Rect();
@@ -88,7 +88,6 @@ public class LineView extends View {
         DOT_INNER_CIR_RADIUS = MyUtils.dip2px(mContext, 2);
         DOT_OUTER_CIR_RADIUS = MyUtils.dip2px(mContext,5);
         MIN_TOP_LINE_LENGTH = MyUtils.dip2px(mContext,12);
-        bottomTextBottomMargin = bottomTextSize;
 
         popupTextPaint.setAntiAlias(true);
         popupTextPaint.setColor(Color.WHITE);
@@ -106,43 +105,53 @@ public class LineView extends View {
 
     /**
      * dataList will be reset when called is method.
-     * @param bottomStringList The String ArrayList in the bottom.
+     * @param bottomTextList The String ArrayList in the bottom.
      */
-    public void setBottomStringList(ArrayList<String> bottomStringList){
+    public void setBottomTextList(ArrayList<String> bottomTextList){
         this.dataList = null;
-        this.bottomStringList = bottomStringList;
-        horizontalGridNum = bottomStringList.size()-1;
+        this.bottomTextList = bottomTextList;
+        horizontalGridNum = bottomTextList.size()-1;
         if(horizontalGridNum<MIN_HORIZONTAL_GRID_NUM){
             horizontalGridNum = MIN_HORIZONTAL_GRID_NUM;
         }
         Rect r = new Rect();
         int longestWidth = 0;
-        for(String s:bottomStringList){
+        String longestStr = "";
+        bottomTextDescent = 0;
+        for(String s:bottomTextList){
             bottomTextPaint.getTextBounds(s,0,s.length(),r);
             if(bottomTextHeight<r.height()){
                 bottomTextHeight = r.height();
             }
             if(autoSetGridWidth&&(longestWidth<r.width())){
                 longestWidth = r.width();
+                longestStr = s;
+            }
+            if(bottomTextDescent<(Math.abs(r.bottom))){
+                bottomTextDescent = Math.abs(r.bottom);
             }
         }
-        if(autoSetGridWidth&&(backgroundGridWidth<longestWidth)){
-            backgroundGridWidth = longestWidth;
+        if(autoSetGridWidth){
+            if(backgroundGridWidth<longestWidth){
+                backgroundGridWidth = longestWidth+(int)bottomTextPaint.measureText(longestStr,0,1);
+            }
+            if(sideLineLength<longestWidth/2){
+                sideLineLength = longestWidth/2;
+            }
         }
-
         refreshView();
     }
 
     /**
      *
      * @param dataList The Integer ArrayList for showing,
-     *                 dataList.size() must < bottomStringList.size()
+     *                 dataList.size() must < bottomTextList.size()
      */
     public void setDataList(ArrayList<Integer> dataList){
         this.dataList = dataList;
-        if(dataList.size() > bottomStringList.size()){
+        if(dataList.size() > bottomTextList.size()){
             throw new RuntimeException("dacer.LineView error:" +
-                    " dataList.size() > bottomStringList.size() !!!");
+                    " dataList.size() > bottomTextList.size() !!!");
         }
         if(autoSetDataOfGird){
             biggestData = 0;
@@ -187,7 +196,7 @@ public class LineView extends View {
         for(int i=0;i<(verticalGridNum+1);i++){
             yCoordinateList.add(topLineLength +
                     ((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
-                    bottomLineLength-bottomTextBottomMargin)*i/(verticalGridNum)));
+                    bottomLineLength-bottomTextDescent)*i/(verticalGridNum)));
         }
 
         drawDotList = new ArrayList<Dot>();
@@ -299,27 +308,27 @@ public class LineView extends View {
             canvas.drawLine(xCoordinateList.get(i),
                     0,
                     xCoordinateList.get(i),
-                    mViewHeight - bottomTextTopMargin - bottomTextHeight-bottomTextBottomMargin,
+                    mViewHeight - bottomTextTopMargin - bottomTextHeight-bottomTextDescent,
                     paint);
         }
 
         //draw dotted lines
-        paint.setPathEffect(effects);
-        Path dottedPath = new Path();
+//        paint.setPathEffect(effects);
+//        Path dottedPath = new Path();
         for(int i=0;i<yCoordinateList.size();i++){
             if((yCoordinateList.size()-1-i)%dataOfAGird == 0){
-                dottedPath.moveTo(0, yCoordinateList.get(i));
-                dottedPath.lineTo(getWidth(), yCoordinateList.get(i));
-//                canvas.drawLine(0,yCoordinateList.get(i),getWidth(),yCoordinateList.get(i),paint);
-                canvas.drawPath(dottedPath, paint);
+//                dottedPath.moveTo(0, yCoordinateList.get(i));
+//                dottedPath.lineTo(getWidth(), yCoordinateList.get(i));
+                canvas.drawLine(0,yCoordinateList.get(i),getWidth(),yCoordinateList.get(i),paint);
+//                canvas.drawPath(dottedPath, paint);
             }
         }
 
         //draw bottom text
-        if(bottomStringList != null){
-            for(int i=0;i<bottomStringList.size();i++){
-                canvas.drawText(bottomStringList.get(i), sideLineLength+backgroundGridWidth*i,
-                        mViewHeight-bottomTextBottomMargin, bottomTextPaint);
+        if(bottomTextList != null){
+            for(int i=0;i<bottomTextList.size();i++){
+                canvas.drawText(bottomTextList.get(i), sideLineLength+backgroundGridWidth*i,
+                        mViewHeight-bottomTextDescent, bottomTextPaint);
             }
         }
     }
