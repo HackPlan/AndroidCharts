@@ -46,6 +46,6 @@ public class BarFragment extends Fragment {
         for(int i=0; i<random*2; i++){
             barDataList.add((int)(Math.random() * 100));
         }
-        barView.setDataList(barDataList);
+        barView.setDataList(barDataList,100);
     }
 }

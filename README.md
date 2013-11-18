@@ -41,7 +41,7 @@ LineView.setDataList(dataList);
 ```java
 BarView barView = (BarView)findViewById(R.id.bar_view);\
 barView.setBottomTextList(strList);
-barView.setDataList(dataList);
+barView.setDataList(dataList,100);
 ```
 
 #### Clock Pie Chart

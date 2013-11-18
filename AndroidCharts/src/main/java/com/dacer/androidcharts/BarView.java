@@ -19,6 +19,7 @@ public class BarView extends View {
     private Paint bgPaint;
     private Paint fgPaint;
     private Rect rect;
+    private int max;
     private int barWidth;
 //    private boolean showSideMargin = true;
     private int bottomTextDescent;
@@ -89,10 +90,11 @@ public class BarView extends View {
 
     /**
      *
-     * @param dataList The ArrayList of Integer with the range of [0-100].
+     * @param dataList The ArrayList of Integer with the range of [0-max].
      */
-    public void setDataList(ArrayList<Integer> dataList){
+    public void setDataList(ArrayList<Integer> dataList, int max){
         this.dataList = dataList;
+        this.max = max;
         setMinimumWidth(2);
         postInvalidate();
     }
@@ -108,7 +110,7 @@ public class BarView extends View {
                         getHeight()-bottomTextHeight-TEXT_TOP_MARGIN);
                 canvas.drawRect(rect,bgPaint);
                 rect.set(BAR_SIDE_MARGIN*i+barWidth*(i-1),
-                        topMargin+(getHeight()-topMargin)*integer/100,
+                        topMargin+(getHeight()-topMargin)*integer/max,
                         (BAR_SIDE_MARGIN+barWidth)* i,
                         getHeight()-bottomTextHeight-TEXT_TOP_MARGIN);
                 canvas.drawRect(rect,fgPaint);
@@ -136,7 +138,7 @@ public class BarView extends View {
     private int measureWidth(int measureSpec){
         int preferred = 0;
         if(bottomTextList != null){
-            preferred = bottomTextList.size()*(barWidth+BAR_SIDE_MARGIN)+BAR_SIDE_MARGIN;
+            preferred = bottomTextList.size()*(barWidth+BAR_SIDE_MARGIN);
         }
         return getMeasurement(measureSpec, preferred);
     }
