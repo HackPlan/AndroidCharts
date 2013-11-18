@@ -9,8 +9,7 @@ A simple Android charts library.
 ![Line Chart](https://raw.github.com/dacer/AndroidCharts/master/pic/line.png)
 
 ```xml
-<HorizontalScrollView
-        ...>
+<HorizontalScrollView>
         <view
             android:layout_width="wrap_content"
             android:layout_height="300dp"
@@ -30,8 +29,7 @@ LineView.setDataList(dataList);
 ![Bar Chart](https://raw.github.com/dacer/AndroidCharts/master/pic/bar.png)
 
 ```xml
-<HorizontalScrollView
-        ...>
+<HorizontalScrollView>
         <view
             android:layout_width="wrap_content"
             android:layout_height="300dp"
@@ -51,14 +49,12 @@ barView.setDataList(dataList);
 ![Clock Pie Chart](https://raw.github.com/dacer/AndroidCharts/master/pic/pie.png)
 
 ```xml
-<HorizontalScrollView
-        ...>
-        <view
-            android:layout_width="wrap_content"
-            android:layout_height="300dp"
-            class="com.dacer.androidcharts.PieView"
-            android:id="@+id/pie_view" />
-</Ho
+<view
+    android:layout_width="wrap_content"
+    android:layout_height="300dp"
+    class="com.dacer.androidcharts.PieView"
+    android:id="@+id/pie_view" />
+```
 
 ```java
 PieView pieView = (PieView)findViewById(R.id.pie_view);
