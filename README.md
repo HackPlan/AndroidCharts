@@ -8,8 +8,19 @@ A simple Android charts library.
 
 ![Line Chart](https://raw.github.com/dacer/AndroidCharts/master/pic/line.png)
 
+```xml
+<HorizontalScrollView
+        ...>
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            class="com.dacer.androidcharts.LineView"
+            android:id="@+id/line_view" />
+</HorizontalScrollView>
+```
+
 ```java
-LineView lineView = (LineView)rootView.findViewById(R.id.line_view);
+LineView lineView = (LineView)findViewById(R.id.line_view);
 LineView.setBottomTextList(strList);
 LineView.setDataList(dataList);
 ```
@@ -17,6 +28,17 @@ LineView.setDataList(dataList);
 #### Bar Chart
 
 ![Bar Chart](https://raw.github.com/dacer/AndroidCharts/master/pic/bar.png)
+
+```xml
+<HorizontalScrollView
+        ...>
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            class="com.dacer.androidcharts.BarView"
+            android:id="@+id/bar_view" />
+</HorizontalScrollView>
+```
 
 ```java
 BarView barView = (BarView)findViewById(R.id.bar_view);\
@@ -27,6 +49,16 @@ barView.setDataList(dataList);
 #### Clock Pie Chart
 
 ![Clock Pie Chart](https://raw.github.com/dacer/AndroidCharts/master/pic/pie.png)
+
+```xml
+<HorizontalScrollView
+        ...>
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            class="com.dacer.androidcharts.PieView"
+            android:id="@+id/pie_view" />
+</Ho
 
 ```java
 PieView pieView = (PieView)findViewById(R.id.pie_view);
