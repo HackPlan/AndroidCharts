@@ -124,7 +124,7 @@ public class BarView extends View {
         if(percentList.isEmpty() || percentList.size()<targetPercentList.size()){
             int temp = targetPercentList.size()-percentList.size();
             for(int i=0; i<temp;i++){
-                percentList.add(0f);
+                percentList.add(1f);
             }
         }
         setMinimumWidth(2);
