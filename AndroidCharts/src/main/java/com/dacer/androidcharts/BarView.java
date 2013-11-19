@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 
 import java.util.ArrayList;
 
@@ -14,12 +15,15 @@ import java.util.ArrayList;
  * Created by Dacer on 11/11/13.
  */
 public class BarView extends View {
-    private ArrayList<Integer> dataList;
+//    private ArrayList<Integer> dataList;
+//    private ArrayList<Integer> targetDataList;
+    private ArrayList<Float> percentList;
+    private ArrayList<Float> targetPercentList;
     private Paint textPaint;
     private Paint bgPaint;
     private Paint fgPaint;
     private Rect rect;
-    private int max;
+//    private int max;
     private int barWidth;
 //    private boolean showSideMargin = true;
     private int bottomTextDescent;
@@ -35,6 +39,28 @@ public class BarView extends View {
     private final int BACKGROUND_COLOR = Color.parseColor("#F6F6F6");
     private final int FOREGROUND_COLOR = Color.parseColor("#FC496D");
 
+    private Runnable animator = new Runnable() {
+        @Override
+        public void run() {
+                boolean needNewFrame = false;
+                for (int i=0; i<targetPercentList.size();i++) {
+                    if (percentList.get(i) < targetPercentList.get(i)) {
+                        percentList.set(i,percentList.get(i)+0.02f);
+                        needNewFrame = true;
+                    } else if (percentList.get(i) > targetPercentList.get(i)){
+                        percentList.set(i,percentList.get(i)-0.02f);
+                        needNewFrame = true;
+                    }
+                    if(Math.abs(targetPercentList.get(i)-percentList.get(i))<0.02f){
+                        percentList.set(i,targetPercentList.get(i));
+                    }
+                }
+                if (needNewFrame) {
+                    postDelayed(this, 20);
+                }
+                invalidate();
+        }
+    };
 
 
     public BarView(Context context){
@@ -59,6 +85,7 @@ public class BarView extends View {
         textPaint.setColor(TEXT_COLOR);
         textPaint.setTextSize(textSize);
         textPaint.setTextAlign(Paint.Align.CENTER);
+        percentList = new ArrayList<Float>();
     }
 
     /**
@@ -66,9 +93,8 @@ public class BarView extends View {
      * @param bottomStringList The String ArrayList in the bottom.
      */
     public void setBottomTextList(ArrayList<String> bottomStringList){
-        this.dataList = null;
+//        this.dataList = null;
         this.bottomTextList = bottomStringList;
-
         Rect r = new Rect();
         bottomTextDescent = 0;
         barWidth = MINI_BAR_WIDTH;
@@ -85,32 +111,47 @@ public class BarView extends View {
             }
         }
         setMinimumWidth(2);
-        postInvalidate();
+//        postInvalidate();
     }
 
     /**
      *
-     * @param dataList The ArrayList of Integer with the range of [0-max].
+     * @param list The ArrayList of Integer with the range of [0-max].
      */
-    public void setDataList(ArrayList<Integer> dataList, int max){
-        this.dataList = dataList;
-        this.max = max;
+    public void setDataList(ArrayList<Integer> list, int max){
+        targetPercentList = new ArrayList<Float>();
+        for(Integer integer : list){
+            targetPercentList.add(1-(float)integer/(float)max);
+        }
+
+        // Make sure percentList.size() == targetPercentList.size()
+        if(percentList.isEmpty() || percentList.size()<targetPercentList.size()){
+            int temp = targetPercentList.size()-percentList.size();
+            for(int i=0; i<temp;i++){
+                percentList.add(0f);
+            }
+        }
         setMinimumWidth(2);
-        postInvalidate();
+        if(!list.isEmpty()){
+            TempLog.show(list.get(0));
+        }
+
+        removeCallbacks(animator);
+        post(animator);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         int i = 1;
-        if(dataList != null && !dataList.isEmpty()){
-            for(Integer integer:dataList){
+        if(percentList != null && !percentList.isEmpty()){
+            for(Float f:percentList){
                 rect.set(BAR_SIDE_MARGIN*i+barWidth*(i-1),
                         topMargin,
                         (BAR_SIDE_MARGIN+barWidth)* i,
                         getHeight()-bottomTextHeight-TEXT_TOP_MARGIN);
                 canvas.drawRect(rect,bgPaint);
                 rect.set(BAR_SIDE_MARGIN*i+barWidth*(i-1),
-                        topMargin+(getHeight()-topMargin)*integer/max,
+                        topMargin+(int)((getHeight()-topMargin)*percentList.get(i-1)),
                         (BAR_SIDE_MARGIN+barWidth)* i,
                         getHeight()-bottomTextHeight-TEXT_TOP_MARGIN);
                 canvas.drawRect(rect,fgPaint);

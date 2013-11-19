@@ -11,5 +11,7 @@ public class TempLog {
     }
     public static void show(int i){
         Log.e("Log--->",String.valueOf(i));
+    }public static void show(float i){
+        Log.e("Log--->",String.valueOf(i));
     }
 }
