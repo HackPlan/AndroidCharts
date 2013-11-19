@@ -33,7 +33,7 @@ public class BarFragment extends Fragment {
     }
 
     private void randomSet(BarView barView){
-        int random = (int)(Math.random()*20);
+        int random = (int)(Math.random()*20)+6;
         ArrayList<String> test = new ArrayList<String>();
         for (int i=0; i<random; i++){
             test.add("test");

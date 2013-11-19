@@ -15,15 +15,12 @@ import java.util.ArrayList;
  * Created by Dacer on 11/11/13.
  */
 public class BarView extends View {
-//    private ArrayList<Integer> dataList;
-//    private ArrayList<Integer> targetDataList;
     private ArrayList<Float> percentList;
     private ArrayList<Float> targetPercentList;
     private Paint textPaint;
     private Paint bgPaint;
     private Paint fgPaint;
     private Rect rect;
-//    private int max;
     private int barWidth;
 //    private boolean showSideMargin = true;
     private int bottomTextDescent;
@@ -31,7 +28,6 @@ public class BarView extends View {
     private int topMargin;
     private int bottomTextHeight;
     private ArrayList<String> bottomTextList;
-    private int textSize;
     private final int MINI_BAR_WIDTH;
     private final int BAR_SIDE_MARGIN;
     private final int TEXT_TOP_MARGIN;
@@ -75,7 +71,7 @@ public class BarView extends View {
         fgPaint.setColor(FOREGROUND_COLOR);
         rect = new Rect();
         topMargin = MyUtils.dip2px(context, 5);
-        textSize = MyUtils.sp2px(context, 15);
+        int textSize = MyUtils.sp2px(context, 15);
         barWidth = MyUtils.dip2px(context,22);
         MINI_BAR_WIDTH = MyUtils.dip2px(context,22);
         BAR_SIDE_MARGIN  = MyUtils.dip2px(context,22);
@@ -132,10 +128,6 @@ public class BarView extends View {
             }
         }
         setMinimumWidth(2);
-        if(!list.isEmpty()){
-            TempLog.show(list.get(0));
-        }
-
         removeCallbacks(animator);
         post(animator);
     }
