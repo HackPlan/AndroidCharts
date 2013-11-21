@@ -37,11 +37,28 @@ public class PieView extends View {
     private RectF cirRect;
     private Rect textRect;
 
-    private ArrayList<PieHelper> helperArrayList;
+    private ArrayList<PieHelper> pieArrayList = new ArrayList<PieHelper>();
 
     private final int TEXT_COLOR = Color.parseColor("#9B9A9B");
     private final int GRAY_COLOR = Color.parseColor("#D4D3D4");
     private final int RED_COLOR = Color.argb(50, 255, 0, 51);
+
+    private Runnable animator = new Runnable() {
+        @Override
+        public void run() {
+            boolean needNewFrame = false;
+            for(PieHelper pie : pieArrayList){
+                pie.update();
+                if(!pie.isAtRest()){
+                    needNewFrame = true;
+                }
+            }
+            if (needNewFrame) {
+                postDelayed(this, 15);
+            }
+            invalidate();
+        }
+    };
 
     public PieView(Context context){
         this(context,null);
@@ -78,15 +95,33 @@ public class PieView extends View {
     }
 
     public void setDate(ArrayList<PieHelper> helperList){
-        helperArrayList = helperList;
-        postInvalidate();
+//        helperArrayList = helperList;
+
+        if(helperList != null && !helperList.isEmpty()){
+            int pieSize = pieArrayList.isEmpty()? 0:pieArrayList.size();
+            for(int i=0;i<helperList.size();i++){
+                if(i>pieSize-1){
+                    pieArrayList.add(new PieHelper(0,0,helperList.get(i)));
+                }else{
+                    pieArrayList.set(i, pieArrayList.get(i).setTarget(helperList.get(i)));
+                }
+            }
+            int temp = pieArrayList.size() - helperList.size();
+            for(int i=0; i<temp; i++){
+                pieArrayList.remove(pieArrayList.size()-1);
+            }
+        }
+        
+        removeCallbacks(animator);
+        post(animator);
+//        postInvalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         drawBackground(canvas);
-        if(helperArrayList != null){
-            for(PieHelper helper:helperArrayList){
+        if(pieArrayList != null){
+            for(PieHelper helper:pieArrayList){
                 canvas.drawArc(cirRect,helper.getStart(),helper.getSweep(),true,redPaint);
             }
         }
@@ -138,16 +173,13 @@ public class PieView extends View {
 
     private int getMeasurement(int measureSpec, int preferred){
         int specSize = View.MeasureSpec.getSize(measureSpec);
-        int measurement = 0;
+        int measurement;
 
         switch(View.MeasureSpec.getMode(measureSpec)){
             case View.MeasureSpec.EXACTLY:
-                // This means the width of this view has been given.
                 measurement = specSize;
                 break;
             case View.MeasureSpec.AT_MOST:
-                // Take the minimum of the preferred size and what
-                // we were told to be.
                 measurement = Math.min(preferred, specSize);
                 break;
             default:

@@ -161,7 +161,7 @@ public class LineView extends View {
         showPopup = false;
         setMinimumWidth(0); // It can help the LineView reset the Width,
                                 // I don't know the better way..
-        postInvalidate();
+//        postInvalidate();
     }
 
     private void refreshAfterDataChanged(){
@@ -437,7 +437,7 @@ public class LineView extends View {
         int data;
         int targetX;
         int targetY;
-        int velocity = 10;
+        int velocity = MyUtils.dip2px(getContext(),10);
 
         Dot(int x,int y,int targetX,int targetY,Integer data){
             this.x = x;

@@ -28,7 +28,7 @@ public class ClockPieFragment extends Fragment {
                 randomSet(pieView);
             }
         });
-        randomSet(pieView);
+        set(pieView);
         return rootView;
     }
 
@@ -37,8 +37,15 @@ public class ClockPieFragment extends Fragment {
         for(int i=0; i<20; i++){
             int startHour = (int)(24*Math.random());
             int startMin = (int)(60*Math.random());
-            pieHelperArrayList.add(new PieHelper(startHour,startMin,0,startHour,startMin+25,0));
+            int duration = (int)(50*Math.random());
+            pieHelperArrayList.add(new PieHelper(startHour,startMin,0,startHour,startMin+duration,0));
         }
+        pieView.setDate(pieHelperArrayList);
+    }
+
+    private void set(PieView pieView){
+        ArrayList<PieHelper> pieHelperArrayList = new ArrayList<PieHelper>();
+        pieHelperArrayList.add(new PieHelper(1,50,2,30));
         pieView.setDate(pieHelperArrayList);
     }
 }
