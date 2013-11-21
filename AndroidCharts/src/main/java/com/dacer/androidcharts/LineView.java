@@ -23,18 +23,11 @@ import java.util.ArrayList;
  */
 public class LineView extends View {
 
-    private int mViewWidth;
-    private int mViewHeight;
-    private Context mContext;
-
     //drawBackground
     private boolean autoSetDataOfGird = true;
     private boolean autoSetGridWidth = true;
-    private int biggestData = 0;
     private int dataOfAGird = 10;
     private int bottomTextHeight = 0;
-    private int bottomTextSize;
-    private int backgroundGridWidth;
 //    private float backgroundGridHeight;
     private int horizontalGridNum;
     private ArrayList<String> bottomTextList;
@@ -43,29 +36,29 @@ public class LineView extends View {
     private ArrayList<Integer> yCoordinateList = new ArrayList<Integer>();
     private ArrayList<Dot> drawDotList;
     private Paint bottomTextPaint = new Paint();
-    private int verticalGridNum; // only include the grid with 4 borders
-    private int sideLineLength;  // --+--+--+--+--+--+--
-                                //  ↑ this           ↑
-
-    private int topLineLength; // | | ← this
-                               //-+-+-
-    private final int bottomLineLength;
-    private final int bottomTextTopMargin;
     private int bottomTextDescent;
 
     //popup
-    private Rect popupTextRect = new Rect();
     private Paint popupTextPaint = new Paint();
-    private int bottomTriangleHeight = 12;
+    private final int bottomTriangleHeight = 12;
     private boolean showPopup = false;
     private Dot selectedDot;
-    private int popupTopPadding;
-    private int popupBottomMargin;
+
+
+    private int topLineLength = MyUtils.dip2px(getContext(), 12);; // | | ← this
+                                                                   //-+-+-
+    private int sideLineLength = MyUtils.dip2px(getContext(),45)/3*2;// --+--+--+--+--+--+--
+                                                                     //  ↑ this           ↑
+    private int backgroundGridWidth = MyUtils.dip2px(getContext(),45);
 
     //Constants
-    private final int DOT_INNER_CIR_RADIUS;
-    private final int DOT_OUTER_CIR_RADIUS;
-    private final int MIN_TOP_LINE_LENGTH;
+    private final int popupTopPadding = MyUtils.dip2px(getContext(),2);
+    private final int popupBottomMargin = MyUtils.dip2px(getContext(),5);
+    private final int bottomTextTopMargin = MyUtils.sp2px(getContext(),5);
+    private final int bottomLineLength = MyUtils.sp2px(getContext(), 22);
+    private final int DOT_INNER_CIR_RADIUS = MyUtils.dip2px(getContext(), 2);
+    private final int DOT_OUTER_CIR_RADIUS = MyUtils.dip2px(getContext(),5);
+    private final int MIN_TOP_LINE_LENGTH = MyUtils.dip2px(getContext(),12);
     private final int MIN_VERTICAL_GRID_NUM = 4;
     private final int MIN_HORIZONTAL_GRID_NUM = 1;
     private final int BACKGROUND_LINE_COLOR = Color.parseColor("#EEEEEE");
@@ -76,28 +69,15 @@ public class LineView extends View {
     }
     public LineView(Context context, AttributeSet attrs){
         super(context, attrs);
-        mContext = context;
-        popupTopPadding = MyUtils.dip2px(mContext,2);
-        popupBottomMargin = MyUtils.dip2px(mContext,5);
-        backgroundGridWidth = MyUtils.dip2px(context,45);
-        sideLineLength = backgroundGridWidth/3*2;
-        bottomTextSize = MyUtils.sp2px(mContext,12);
-        bottomTextTopMargin = MyUtils.sp2px(mContext,5);
-        bottomLineLength = MyUtils.sp2px(mContext, 22);
-        topLineLength = MyUtils.dip2px(mContext, 12);
-        DOT_INNER_CIR_RADIUS = MyUtils.dip2px(mContext, 2);
-        DOT_OUTER_CIR_RADIUS = MyUtils.dip2px(mContext,5);
-        MIN_TOP_LINE_LENGTH = MyUtils.dip2px(mContext,12);
 
         popupTextPaint.setAntiAlias(true);
         popupTextPaint.setColor(Color.WHITE);
-        popupTextPaint.setTextSize(MyUtils.sp2px(mContext, 13));
+        popupTextPaint.setTextSize(MyUtils.sp2px(getContext(), 13));
         popupTextPaint.setStrokeWidth(5);
         popupTextPaint.setTextAlign(Paint.Align.CENTER);
 
-
         bottomTextPaint.setAntiAlias(true);
-        bottomTextPaint.setTextSize(bottomTextSize);
+        bottomTextPaint.setTextSize(MyUtils.sp2px(getContext(),12));
         bottomTextPaint.setTextAlign(Paint.Align.CENTER);
         bottomTextPaint.setStyle(Paint.Style.FILL);
         bottomTextPaint.setColor(BOTTOM_TEXT_COLOR);
@@ -154,7 +134,7 @@ public class LineView extends View {
                     " dataList.size() > bottomTextList.size() !!!");
         }
         if(autoSetDataOfGird){
-            biggestData = 0;
+            int biggestData = 0;
             for(Integer i:dataList){
                 if(biggestData<i){
                     biggestData = i;
@@ -170,18 +150,10 @@ public class LineView extends View {
     }
 
     private void refreshView(){
-        verticalGridNum = MIN_VERTICAL_GRID_NUM;
-        if(dataList != null && !dataList.isEmpty()){
-            for(Integer integer:dataList){
-                if(verticalGridNum<(integer+1)){
-                    verticalGridNum = integer+1;
-                }
-            }
-        }
-
+        int verticalGridNum = getVerticaGridlNum();
         // For prevent popup can't be completely showed when backgroundGridHeight is too small.
         // But this code not so good.
-        if((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin)/
+        if((getHeight()-topLineLength-bottomTextHeight-bottomTextTopMargin)/
                 (verticalGridNum+2)<getPopupHeight()){
             topLineLength = getPopupHeight()+DOT_OUTER_CIR_RADIUS+DOT_INNER_CIR_RADIUS+2;
         }else{
@@ -195,7 +167,7 @@ public class LineView extends View {
         }
         for(int i=0;i<(verticalGridNum+1);i++){
             yCoordinateList.add(topLineLength +
-                    ((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
+                    ((getHeight()-topLineLength-bottomTextHeight-bottomTextTopMargin-
                     bottomLineLength-bottomTextDescent)*i/(verticalGridNum)));
         }
 
@@ -212,6 +184,18 @@ public class LineView extends View {
         setMinimumWidth(0); // It can help the LineView reset the Width,
                                 // I don't know the better way..
         postInvalidate();
+    }
+
+    private int getVerticaGridlNum(){
+        int verticalGridNum = MIN_VERTICAL_GRID_NUM;
+        if(dataList != null && !dataList.isEmpty()){
+            for(Integer integer:dataList){
+                if(verticalGridNum<(integer+1)){
+                    verticalGridNum = integer+1;
+                }
+            }
+        }
+        return verticalGridNum;
     }
 
     @Override
@@ -238,16 +222,15 @@ public class LineView extends View {
      */
     private void drawPopup(Canvas canvas,String num, Point point){
         boolean singularNum = (num.length() == 1);
-        int sidePadding = MyUtils.dip2px(mContext,singularNum? 8:5);
+        int sidePadding = MyUtils.dip2px(getContext(),singularNum? 8:5);
         int x = point.x;
-        int y = point.y-MyUtils.dip2px(mContext,5);
-
+        int y = point.y-MyUtils.dip2px(getContext(),5);
+        Rect popupTextRect = new Rect();
         popupTextPaint.getTextBounds(num,0,num.length(),popupTextRect);
         Rect r = new Rect(x-popupTextRect.width()/2-sidePadding,
                 y - popupTextRect.height()-bottomTriangleHeight-popupTopPadding*2-popupBottomMargin,
                 x + popupTextRect.width()/2+sidePadding,
                 y+popupTopPadding-popupBottomMargin);
-
 
         NinePatchDrawable popup = (NinePatchDrawable)getResources().
                 getDrawable(R.drawable.popup_red);
@@ -257,6 +240,7 @@ public class LineView extends View {
     }
 
     private int getPopupHeight(){
+        Rect popupTextRect = new Rect();
         popupTextPaint.getTextBounds("9",0,1,popupTextRect);
         Rect r = new Rect(-popupTextRect.width()/2,
                  - popupTextRect.height()-bottomTriangleHeight-popupTopPadding*2-popupBottomMargin,
@@ -283,7 +267,8 @@ public class LineView extends View {
         Paint linePaint = new Paint();
         linePaint.setAntiAlias(true);
         linePaint.setColor(Color.parseColor("#FF0033"));
-        linePaint.setStrokeWidth(MyUtils.dip2px(mContext,2));
+        linePaint.setStrokeWidth(MyUtils.dip2px(getContext(), 2));
+        int verticalGridNum = getVerticaGridlNum();
         if(dataList!=null && !dataList.isEmpty()){
             for(int i=0;i<(dataList.size()-1);i++){
                 canvas.drawLine(xCoordinateList.get(i),
@@ -298,7 +283,7 @@ public class LineView extends View {
     private void drawBackgroundLines(Canvas canvas){
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(MyUtils.dip2px(mContext,1f));
+        paint.setStrokeWidth(MyUtils.dip2px(getContext(),1f));
         paint.setColor(BACKGROUND_LINE_COLOR);
         PathEffect effects = new DashPathEffect(
                 new float[]{10,5,10,5}, 1);
@@ -308,7 +293,7 @@ public class LineView extends View {
             canvas.drawLine(xCoordinateList.get(i),
                     0,
                     xCoordinateList.get(i),
-                    mViewHeight - bottomTextTopMargin - bottomTextHeight-bottomTextDescent,
+                    getHeight() - bottomTextTopMargin - bottomTextHeight-bottomTextDescent,
                     paint);
         }
 
@@ -328,15 +313,15 @@ public class LineView extends View {
         if(bottomTextList != null){
             for(int i=0;i<bottomTextList.size();i++){
                 canvas.drawText(bottomTextList.get(i), sideLineLength+backgroundGridWidth*i,
-                        mViewHeight-bottomTextDescent, bottomTextPaint);
+                        getHeight()-bottomTextDescent, bottomTextPaint);
             }
         }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        mViewWidth = measureWidth(widthMeasureSpec);
-        mViewHeight = measureHeight(heightMeasureSpec);
+        int mViewWidth = measureWidth(widthMeasureSpec);
+        int mViewHeight = measureHeight(heightMeasureSpec);
         refreshView();
         setMeasuredDimension(mViewWidth,mViewHeight);
     }

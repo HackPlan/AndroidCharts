@@ -107,7 +107,7 @@ public class BarView extends View {
             }
         }
         setMinimumWidth(2);
-//        postInvalidate();
+        postInvalidate();
     }
 
     /**
@@ -125,6 +125,11 @@ public class BarView extends View {
             int temp = targetPercentList.size()-percentList.size();
             for(int i=0; i<temp;i++){
                 percentList.add(1f);
+            }
+        } else if (percentList.size()>targetPercentList.size()){
+            int temp = percentList.size()-targetPercentList.size();
+            for(int i=0; i<temp;i++){
+                percentList.remove(percentList.size()-1);
             }
         }
         setMinimumWidth(2);
