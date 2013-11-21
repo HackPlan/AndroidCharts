@@ -28,8 +28,6 @@ public class LineView extends View {
     private boolean autoSetGridWidth = true;
     private int dataOfAGird = 10;
     private int bottomTextHeight = 0;
-//    private float backgroundGridHeight;
-    private int horizontalGridNum;
     private ArrayList<String> bottomTextList;
     private ArrayList<Integer> dataList;
     private ArrayList<Integer> xCoordinateList = new ArrayList<Integer>();
@@ -90,10 +88,7 @@ public class LineView extends View {
     public void setBottomTextList(ArrayList<String> bottomTextList){
         this.dataList = null;
         this.bottomTextList = bottomTextList;
-        horizontalGridNum = bottomTextList.size()-1;
-        if(horizontalGridNum<MIN_HORIZONTAL_GRID_NUM){
-            horizontalGridNum = MIN_HORIZONTAL_GRID_NUM;
-        }
+
         Rect r = new Rect();
         int longestWidth = 0;
         String longestStr = "";
@@ -111,6 +106,7 @@ public class LineView extends View {
                 bottomTextDescent = Math.abs(r.bottom);
             }
         }
+
         if(autoSetGridWidth){
             if(backgroundGridWidth<longestWidth){
                 backgroundGridWidth = longestWidth+(int)bottomTextPaint.measureText(longestStr,0,1);
@@ -119,7 +115,8 @@ public class LineView extends View {
                 sideLineLength = longestWidth/2;
             }
         }
-        refreshView();
+
+        refreshXCoordinateList(getHorizontalGridNum());
     }
 
     /**
@@ -145,41 +142,10 @@ public class LineView extends View {
                 dataOfAGird *= 10;
             }
         }
-        
-        refreshView();
-    }
-
-    private void refreshView(){
-        int verticalGridNum = getVerticaGridlNum();
-        // For prevent popup can't be completely showed when backgroundGridHeight is too small.
-        // But this code not so good.
-        if((getHeight()-topLineLength-bottomTextHeight-bottomTextTopMargin)/
-                (verticalGridNum+2)<getPopupHeight()){
-            topLineLength = getPopupHeight()+DOT_OUTER_CIR_RADIUS+DOT_INNER_CIR_RADIUS+2;
-        }else{
-            topLineLength = MIN_TOP_LINE_LENGTH;
-        }
-
-        xCoordinateList.clear();
-        yCoordinateList.clear();
-        for(int i=0;i<(horizontalGridNum+1);i++){
-            xCoordinateList.add(sideLineLength + backgroundGridWidth*i);
-        }
-        for(int i=0;i<(verticalGridNum+1);i++){
-            yCoordinateList.add(topLineLength +
-                    ((getHeight()-topLineLength-bottomTextHeight-bottomTextTopMargin-
-                    bottomLineLength-bottomTextDescent)*i/(verticalGridNum)));
-        }
-
-        drawDotList = new ArrayList<Dot>();
-        if(dataList != null && !dataList.isEmpty()){
-            for(int i=0;i<dataList.size();i++){
-                int x = xCoordinateList.get(i);
-                int y = yCoordinateList.get(verticalGridNum - dataList.get(i));
-                drawDotList.add(new Dot(x,y,dataList.get(i)));
-            }
-        }
-
+        int verticaGridNum = getVerticaGridlNum();
+        refreshYCoordinateList(verticaGridNum);
+        refreshDrawDotList(verticaGridNum);
+        refreshTopLineLength(verticaGridNum);
         showPopup = false;
         setMinimumWidth(0); // It can help the LineView reset the Width,
                                 // I don't know the better way..
@@ -196,6 +162,53 @@ public class LineView extends View {
             }
         }
         return verticalGridNum;
+    }
+
+    private int getHorizontalGridNum(){
+        int horizontalGridNum = bottomTextList.size()-1;
+        if(horizontalGridNum<MIN_HORIZONTAL_GRID_NUM){
+            horizontalGridNum = MIN_HORIZONTAL_GRID_NUM;
+        }
+        return horizontalGridNum;
+    }
+
+    private void refreshXCoordinateList(int horizontalGridNum){
+        xCoordinateList.clear();
+        for(int i=0;i<(horizontalGridNum+1);i++){
+            xCoordinateList.add(sideLineLength + backgroundGridWidth*i);
+        }
+
+    }
+
+    private void refreshYCoordinateList(int verticalGridNum){
+        yCoordinateList.clear();
+        for(int i=0;i<(verticalGridNum+1);i++){
+            yCoordinateList.add(topLineLength +
+                    ((getHeight()-topLineLength-bottomTextHeight-bottomTextTopMargin-
+                            bottomLineLength-bottomTextDescent)*i/(verticalGridNum)));
+        }
+    }
+
+    private void refreshDrawDotList(int verticalGridNum){
+        drawDotList = new ArrayList<Dot>();
+        if(dataList != null && !dataList.isEmpty()){
+            for(int i=0;i<dataList.size();i++){
+                int x = xCoordinateList.get(i);
+                int y = yCoordinateList.get(verticalGridNum - dataList.get(i));
+                drawDotList.add(new Dot(x,y,dataList.get(i)));
+            }
+        }
+    }
+
+    private void refreshTopLineLength(int verticalGridNum){
+        // For prevent popup can't be completely showed when backgroundGridHeight is too small.
+        // But this code not so good.
+        if((getHeight()-topLineLength-bottomTextHeight-bottomTextTopMargin)/
+                (verticalGridNum+2)<getPopupHeight()){
+            topLineLength = getPopupHeight()+DOT_OUTER_CIR_RADIUS+DOT_INNER_CIR_RADIUS+2;
+        }else{
+            topLineLength = MIN_TOP_LINE_LENGTH;
+        }
     }
 
     @Override
@@ -322,11 +335,15 @@ public class LineView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int mViewWidth = measureWidth(widthMeasureSpec);
         int mViewHeight = measureHeight(heightMeasureSpec);
-        refreshView();
+        int verticaGridNum = getVerticaGridlNum();
+        refreshYCoordinateList(verticaGridNum);
+        refreshDrawDotList(verticaGridNum);
+        refreshTopLineLength(verticaGridNum);
         setMeasuredDimension(mViewWidth,mViewHeight);
     }
 
     private int measureWidth(int measureSpec){
+        int horizontalGridNum = getHorizontalGridNum();
         int preferred = backgroundGridWidth*horizontalGridNum+sideLineLength*2;
         return getMeasurement(measureSpec, preferred);
     }
