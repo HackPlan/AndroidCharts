@@ -58,7 +58,6 @@ public class BarView extends View {
         }
     };
 
-
     public BarView(Context context){
         this(context,null);
     }

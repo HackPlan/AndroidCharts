@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Created by Dacer on 11/4/13.
  */
 public class LineView extends View {
-
+    private int mViewHeight;
     //drawBackground
     private boolean autoSetDataOfGird = true;
     private boolean autoSetGridWidth = true;
@@ -32,7 +32,7 @@ public class LineView extends View {
     private ArrayList<Integer> dataList;
     private ArrayList<Integer> xCoordinateList = new ArrayList<Integer>();
     private ArrayList<Integer> yCoordinateList = new ArrayList<Integer>();
-    private ArrayList<Dot> drawDotList;
+    private ArrayList<Dot> drawDotList = new ArrayList<Dot>();;
     private Paint bottomTextPaint = new Paint();
     private int bottomTextDescent;
 
@@ -41,7 +41,6 @@ public class LineView extends View {
     private final int bottomTriangleHeight = 12;
     private boolean showPopup = false;
     private Dot selectedDot;
-
 
     private int topLineLength = MyUtils.dip2px(getContext(), 12);; // | | ← this
                                                                    //-+-+-
@@ -62,12 +61,28 @@ public class LineView extends View {
     private final int BACKGROUND_LINE_COLOR = Color.parseColor("#EEEEEE");
     private final int BOTTOM_TEXT_COLOR = Color.parseColor("#9B9A9B");
 
+    private Runnable animator = new Runnable() {
+        @Override
+        public void run() {
+            boolean needNewFrame = false;
+            for(Dot dot : drawDotList){
+                dot.update();
+                if(!dot.isAtRest()){
+                    needNewFrame = true;
+                }
+            }
+            if (needNewFrame) {
+                postDelayed(this, 20);
+            }
+            invalidate();
+        }
+    };
+
     public LineView(Context context){
         this(context,null);
     }
     public LineView(Context context, AttributeSet attrs){
         super(context, attrs);
-
         popupTextPaint.setAntiAlias(true);
         popupTextPaint.setColor(Color.WHITE);
         popupTextPaint.setTextSize(MyUtils.sp2px(getContext(), 13));
@@ -142,17 +157,21 @@ public class LineView extends View {
                 dataOfAGird *= 10;
             }
         }
-        int verticaGridNum = getVerticaGridlNum();
-        refreshYCoordinateList(verticaGridNum);
-        refreshDrawDotList(verticaGridNum);
-        refreshTopLineLength(verticaGridNum);
+        refreshAfterDataChanged();
         showPopup = false;
         setMinimumWidth(0); // It can help the LineView reset the Width,
                                 // I don't know the better way..
         postInvalidate();
     }
 
-    private int getVerticaGridlNum(){
+    private void refreshAfterDataChanged(){
+        int verticalGridNum = getVerticalGridlNum();
+        refreshTopLineLength(verticalGridNum);
+        refreshYCoordinateList(verticalGridNum);
+        refreshDrawDotList(verticalGridNum);
+    }
+
+    private int getVerticalGridlNum(){
         int verticalGridNum = MIN_VERTICAL_GRID_NUM;
         if(dataList != null && !dataList.isEmpty()){
             for(Integer integer:dataList){
@@ -184,26 +203,36 @@ public class LineView extends View {
         yCoordinateList.clear();
         for(int i=0;i<(verticalGridNum+1);i++){
             yCoordinateList.add(topLineLength +
-                    ((getHeight()-topLineLength-bottomTextHeight-bottomTextTopMargin-
+                    ((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin-
                             bottomLineLength-bottomTextDescent)*i/(verticalGridNum)));
         }
     }
 
     private void refreshDrawDotList(int verticalGridNum){
-        drawDotList = new ArrayList<Dot>();
         if(dataList != null && !dataList.isEmpty()){
+            int drawDotSize = drawDotList.isEmpty()? 0:drawDotList.size();
             for(int i=0;i<dataList.size();i++){
                 int x = xCoordinateList.get(i);
                 int y = yCoordinateList.get(verticalGridNum - dataList.get(i));
-                drawDotList.add(new Dot(x,y,dataList.get(i)));
+                if(i>drawDotSize-1){
+                    drawDotList.add(new Dot(x, 0, x, y, dataList.get(i)));
+                }else{
+                    drawDotList.set(i, drawDotList.get(i).setTargetData(x,y,dataList.get(i)));
+                }
+            }
+            int temp = drawDotList.size() - dataList.size();
+            for(int i=0; i<temp; i++){
+                drawDotList.remove(drawDotList.size()-1);
             }
         }
+        removeCallbacks(animator);
+        post(animator);
     }
 
     private void refreshTopLineLength(int verticalGridNum){
         // For prevent popup can't be completely showed when backgroundGridHeight is too small.
         // But this code not so good.
-        if((getHeight()-topLineLength-bottomTextHeight-bottomTextTopMargin)/
+        if((mViewHeight-topLineLength-bottomTextHeight-bottomTextTopMargin)/
                 (verticalGridNum+2)<getPopupHeight()){
             topLineLength = getPopupHeight()+DOT_OUTER_CIR_RADIUS+DOT_INNER_CIR_RADIUS+2;
         }else{
@@ -281,15 +310,12 @@ public class LineView extends View {
         linePaint.setAntiAlias(true);
         linePaint.setColor(Color.parseColor("#FF0033"));
         linePaint.setStrokeWidth(MyUtils.dip2px(getContext(), 2));
-        int verticalGridNum = getVerticaGridlNum();
-        if(dataList!=null && !dataList.isEmpty()){
-            for(int i=0;i<(dataList.size()-1);i++){
-                canvas.drawLine(xCoordinateList.get(i),
-                        yCoordinateList.get(verticalGridNum-dataList.get(i)),
-                        xCoordinateList.get(i+1),
-                        yCoordinateList.get(verticalGridNum-dataList.get(i+1)),
-                        linePaint);
-            }
+        for(int i=0; i<drawDotList.size()-1; i++){
+            canvas.drawLine(drawDotList.get(i).x,
+                    drawDotList.get(i).y,
+                    drawDotList.get(i+1).x,
+                    drawDotList.get(i+1).y,
+                    linePaint);
         }
     }
 
@@ -306,7 +332,7 @@ public class LineView extends View {
             canvas.drawLine(xCoordinateList.get(i),
                     0,
                     xCoordinateList.get(i),
-                    getHeight() - bottomTextTopMargin - bottomTextHeight-bottomTextDescent,
+                    mViewHeight - bottomTextTopMargin - bottomTextHeight-bottomTextDescent,
                     paint);
         }
 
@@ -326,7 +352,7 @@ public class LineView extends View {
         if(bottomTextList != null){
             for(int i=0;i<bottomTextList.size();i++){
                 canvas.drawText(bottomTextList.get(i), sideLineLength+backgroundGridWidth*i,
-                        getHeight()-bottomTextDescent, bottomTextPaint);
+                        mViewHeight-bottomTextDescent, bottomTextPaint);
             }
         }
     }
@@ -334,11 +360,8 @@ public class LineView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int mViewWidth = measureWidth(widthMeasureSpec);
-        int mViewHeight = measureHeight(heightMeasureSpec);
-        int verticaGridNum = getVerticaGridlNum();
-        refreshYCoordinateList(verticaGridNum);
-        refreshDrawDotList(verticaGridNum);
-        refreshTopLineLength(verticaGridNum);
+        mViewHeight = measureHeight(heightMeasureSpec);
+        refreshAfterDataChanged();
         setMeasuredDimension(mViewWidth,mViewHeight);
     }
 
@@ -396,19 +419,50 @@ public class LineView extends View {
         return true;
     }
 
+    private int updateSelf(int origin, int target, int velocity){
+        if (origin < target) {
+            origin += velocity;
+        } else if (origin > target){
+            origin-= velocity;
+        }
+        if(Math.abs(target-origin)<velocity){
+            origin = target;
+        }
+        return origin;
+    }
+    
     class Dot{
         int x;
         int y;
         int data;
+        int targetX;
+        int targetY;
+        int velocity = 10;
 
-        Dot(int x,int y,Integer data){
+        Dot(int x,int y,int targetX,int targetY,Integer data){
             this.x = x;
             this.y = y;
-            this.data = data;
+            setTargetData(targetX, targetY,data);
         }
 
         Point getPoint(){
             return new Point(x,y);
+        }
+
+        Dot setTargetData(int targetX,int targetY,Integer data){
+            this.targetX = targetX;
+            this.targetY = targetY;
+            this.data = data;
+            return this;
+        }
+
+        boolean isAtRest(){
+            return (x==targetX)&&(y==targetY);
+        }
+
+        void update(){
+            x = updateSelf(x, targetX, velocity);
+            y = updateSelf(y, targetY, velocity);
         }
     }
 }

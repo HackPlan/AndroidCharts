@@ -35,7 +35,7 @@ public class LineFragment extends Fragment {
 
     private void randomSet(LineView lineView){
         ArrayList<String> test = new ArrayList<String>();
-        int randomint = (int)(Math.random()*30+1);
+        int randomint = (int)(Math.random()*30+6);
         for (int i=0; i<randomint; i++){
             test.add(String.valueOf(i+1));
         }
