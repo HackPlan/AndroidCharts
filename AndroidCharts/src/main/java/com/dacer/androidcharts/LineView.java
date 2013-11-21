@@ -161,7 +161,7 @@ public class LineView extends View {
         showPopup = false;
         setMinimumWidth(0); // It can help the LineView reset the Width,
                                 // I don't know the better way..
-//        postInvalidate();
+        postInvalidate();
     }
 
     private void refreshAfterDataChanged(){

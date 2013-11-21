@@ -46,6 +46,7 @@ public class ClockPieFragment extends Fragment {
     private void set(PieView pieView){
         ArrayList<PieHelper> pieHelperArrayList = new ArrayList<PieHelper>();
         pieHelperArrayList.add(new PieHelper(1,50,2,30));
+        pieHelperArrayList.add(new PieHelper(6,50,8,30));
         pieView.setDate(pieHelperArrayList);
     }
 }

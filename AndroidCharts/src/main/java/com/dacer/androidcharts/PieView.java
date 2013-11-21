@@ -54,7 +54,7 @@ public class PieView extends View {
                 }
             }
             if (needNewFrame) {
-                postDelayed(this, 15);
+                postDelayed(this, 10);
             }
             invalidate();
         }
@@ -95,12 +95,11 @@ public class PieView extends View {
     }
 
     public void setDate(ArrayList<PieHelper> helperList){
-//        helperArrayList = helperList;
-
         if(helperList != null && !helperList.isEmpty()){
             int pieSize = pieArrayList.isEmpty()? 0:pieArrayList.size();
             for(int i=0;i<helperList.size();i++){
                 if(i>pieSize-1){
+//                    float mStart = helperList.get(i).getStart();
                     pieArrayList.add(new PieHelper(0,0,helperList.get(i)));
                 }else{
                     pieArrayList.set(i, pieArrayList.get(i).setTarget(helperList.get(i)));
@@ -114,7 +113,6 @@ public class PieView extends View {
         
         removeCallbacks(animator);
         post(animator);
-//        postInvalidate();
     }
 
     @Override
