@@ -115,6 +115,8 @@ public class BarView extends View {
      */
     public void setDataList(ArrayList<Integer> list, int max){
         targetPercentList = new ArrayList<Float>();
+        if(max == 0) max = 1;
+
         for(Integer integer : list){
             targetPercentList.add(1-(float)integer/(float)max);
         }

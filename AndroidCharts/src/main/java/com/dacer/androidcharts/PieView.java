@@ -109,6 +109,8 @@ public class PieView extends View {
             for(int i=0; i<temp; i++){
                 pieArrayList.remove(pieArrayList.size()-1);
             }
+        }else {
+            pieArrayList.clear();
         }
         
         removeCallbacks(animator);
