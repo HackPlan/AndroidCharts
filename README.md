@@ -2,8 +2,13 @@
 
 A simple Android charts library.
 
-## Usage
+##Building
+####Building From Eclipse
+* Import `/AndroidCharts` folder.
+* Move `/java` folder to `/src` folder.
+* `mkdir libs`, copy `android-support-v4.jar` to `/libs`.
 
+## Usage
 #### Line Chart
 
 ![Line Chart](https://raw.github.com/dacer/AndroidCharts/master/pic/line.png)
