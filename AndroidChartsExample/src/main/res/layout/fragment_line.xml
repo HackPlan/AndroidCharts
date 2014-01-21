@@ -5,14 +5,13 @@
 
     <HorizontalScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/horizontalScrollView"
         android:layout_alignParentRight="true"
-        android:layout_above="@+id/line_button"
-        android:layout_margin="22dp">
+        android:layout_above="@+id/line_button">
     <view
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="200dp"
         class="com.dacer.androidcharts.LineView"
         android:id="@+id/line_view"/>
     </HorizontalScrollView>
