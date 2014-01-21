@@ -1,5 +1,8 @@
 package com.dacer.androidcharts;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,14 +15,14 @@ import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.drawable.NinePatchDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
-import java.util.ArrayList;
 
 
 /**
  * Created by Dacer on 11/4/13.
+ * Edited by Lee youngchan 21/1/14
  */
 public class LineView extends View {
     private int mViewHeight;
@@ -29,23 +32,30 @@ public class LineView extends View {
     private int dataOfAGird = 10;
     private int bottomTextHeight = 0;
     private ArrayList<String> bottomTextList;
+    
+    private ArrayList<ArrayList<Integer>> dataLists;
     private ArrayList<Integer> dataList;
+    
     private ArrayList<Integer> xCoordinateList = new ArrayList<Integer>();
     private ArrayList<Integer> yCoordinateList = new ArrayList<Integer>();
-    private ArrayList<Dot> drawDotList = new ArrayList<Dot>();;
+    
+    private ArrayList<ArrayList<Dot>> drawDotLists = new ArrayList<ArrayList<Dot>>();
+    private ArrayList<Dot> drawDotList = new ArrayList<Dot>();
+    
     private Paint bottomTextPaint = new Paint();
     private int bottomTextDescent;
 
     //popup
     private Paint popupTextPaint = new Paint();
     private final int bottomTriangleHeight = 12;
-    private boolean showPopup = false;
-    private Dot selectedDot;
+    public boolean showPopup = true; 
 
-    private int topLineLength = MyUtils.dip2px(getContext(), 12);; // | | ← this
+	private Dot selectedDot;
+
+    private int topLineLength = MyUtils.dip2px(getContext(), 12);; // | | ��this
                                                                    //-+-+-
     private int sideLineLength = MyUtils.dip2px(getContext(),45)/3*2;// --+--+--+--+--+--+--
-                                                                     //  ↑ this           ↑
+                                                                     //  ��this           ��    
     private int backgroundGridWidth = MyUtils.dip2px(getContext(),45);
 
     //Constants
@@ -60,15 +70,37 @@ public class LineView extends View {
     private final int MIN_HORIZONTAL_GRID_NUM = 1;
     private final int BACKGROUND_LINE_COLOR = Color.parseColor("#EEEEEE");
     private final int BOTTOM_TEXT_COLOR = Color.parseColor("#9B9A9B");
+    
+    public final int All = 1;
+    public final int MAXMIN_ONLY = 2;
+    public final int NONE = 3;
 
-    private Runnable animator = new Runnable() {
+    private int POPUP_TYPE = MAXMIN_ONLY;
+    public void setPOPUP_TYPE(int pOPUP_TYPE) {
+		POPUP_TYPE = pOPUP_TYPE;
+	}
+
+	//점선표시
+    private Boolean DOTLINE = false;
+    //라인컬러
+    private String[] ColorArray = {"#e74c3c","#2980b9","#1abc9c"};
+    //popup 컬러
+    private int[] PopupColorArray = {R.drawable.popup_red,R.drawable.popup_blue,R.drawable.popup_green}; 
+    
+	public void setDOTLINE(Boolean dOTLINE) {
+		DOTLINE = dOTLINE;
+	}
+
+	private Runnable animator = new Runnable() {
         @Override
         public void run() {
             boolean needNewFrame = false;
-            for(Dot dot : drawDotList){
-                dot.update();
-                if(!dot.isAtRest()){
-                    needNewFrame = true;
+            for(ArrayList<Dot> data : drawDotLists){
+            	for(Dot dot : data){
+                    dot.update();
+                    if(!dot.isAtRest()){
+                        needNewFrame = true;
+                    }
                 }
             }
             if (needNewFrame) {
@@ -139,26 +171,32 @@ public class LineView extends View {
      * @param dataList The Integer ArrayList for showing,
      *                 dataList.size() must < bottomTextList.size()
      */
-    public void setDataList(ArrayList<Integer> dataList){
-        this.dataList = dataList;
-        if(dataList.size() > bottomTextList.size()){
-            throw new RuntimeException("dacer.LineView error:" +
-                    " dataList.size() > bottomTextList.size() !!!");
+    public void setDataList(ArrayList<ArrayList<Integer>> dataLists){
+    	selectedDot = null;
+        this.dataLists = dataLists;
+        for(ArrayList<Integer> list : dataLists){
+        	if(list.size() > bottomTextList.size()){
+                throw new RuntimeException("dacer.LineView error:" +
+                        " dataList.size() > bottomTextList.size() !!!");
+            }
         }
-        if(autoSetDataOfGird){
-            int biggestData = 0;
-            for(Integer i:dataList){
-                if(biggestData<i){
-                    biggestData = i;
+        int biggestData = 0;
+        for(ArrayList<Integer> list : dataLists){
+        	if(autoSetDataOfGird){
+                for(Integer i:list){
+                    if(biggestData<i){
+                        biggestData = i;
+                    }
                 }
-            }
-            dataOfAGird = 1;
-            while(biggestData/10 > dataOfAGird){
-                dataOfAGird *= 10;
-            }
+        	}
+        	dataOfAGird = 1;
+        	while(biggestData/10 > dataOfAGird){
+        		dataOfAGird *= 10;
+        	}
         }
+        
         refreshAfterDataChanged();
-        showPopup = false;
+        showPopup = true;
         setMinimumWidth(0); // It can help the LineView reset the Width,
                                 // I don't know the better way..
         postInvalidate();
@@ -173,12 +211,14 @@ public class LineView extends View {
 
     private int getVerticalGridlNum(){
         int verticalGridNum = MIN_VERTICAL_GRID_NUM;
-        if(dataList != null && !dataList.isEmpty()){
-            for(Integer integer:dataList){
-                if(verticalGridNum<(integer+1)){
-                    verticalGridNum = integer+1;
-                }
-            }
+        if(dataLists != null && !dataLists.isEmpty()){
+        	for(ArrayList<Integer> list : dataLists){
+	        	for(Integer integer:list){
+	        		if(verticalGridNum<(integer+1)){
+	        			verticalGridNum = integer+1;
+	        		}
+	        	}
+        	}
         }
         return verticalGridNum;
     }
@@ -209,21 +249,32 @@ public class LineView extends View {
     }
 
     private void refreshDrawDotList(int verticalGridNum){
-        if(dataList != null && !dataList.isEmpty()){
-            int drawDotSize = drawDotList.isEmpty()? 0:drawDotList.size();
-            for(int i=0;i<dataList.size();i++){
-                int x = xCoordinateList.get(i);
-                int y = yCoordinateList.get(verticalGridNum - dataList.get(i));
-                if(i>drawDotSize-1){
-                    drawDotList.add(new Dot(x, 0, x, y, dataList.get(i)));
-                }else{
-                    drawDotList.set(i, drawDotList.get(i).setTargetData(x,y,dataList.get(i)));
+        if(dataLists != null && !dataLists.isEmpty()){
+    		if(drawDotLists.size() == 0){
+    			for(int k = 0; k < dataLists.size(); k++){
+    				drawDotLists.add(new ArrayList<LineView.Dot>());
+    			}
+    		}
+        	for(int k = 0; k < dataLists.size(); k++){
+        		int drawDotSize = drawDotLists.get(k).isEmpty()? 0:drawDotLists.get(k).size();
+        		
+        		for(int i=0;i<dataLists.get(k).size();i++){
+                    int x = xCoordinateList.get(i);
+                    int y = yCoordinateList.get(verticalGridNum - dataLists.get(k).get(i));
+                    if(i>drawDotSize-1){
+                    	//도트리스트를 추가한다.
+                        drawDotLists.get(k).add(new Dot(x, 0, x, y, dataLists.get(k).get(i),k));
+                    }else{
+                    	//도트리스트에 타겟을 설정한다.
+                        drawDotLists.get(k).set(i, drawDotLists.get(k).get(i).setTargetData(x,y,dataLists.get(k).get(i),k));
+                    }
                 }
-            }
-            int temp = drawDotList.size() - dataList.size();
-            for(int i=0; i<temp; i++){
-                drawDotList.remove(drawDotList.size()-1);
-            }
+        		
+        		int temp = drawDotLists.get(k).size() - dataLists.get(k).size();
+        		for(int i=0; i<temp; i++){
+        			drawDotLists.get(k).remove(drawDotLists.get(k).size()-1);
+        		}
+        	}
         }
         removeCallbacks(animator);
         post(animator);
@@ -245,10 +296,27 @@ public class LineView extends View {
         drawBackgroundLines(canvas);
         drawLines(canvas);
         drawDots(canvas);
+
+        
+        for(int k=0; k < drawDotLists.size(); k++){
+        	int MaxValue = Collections.max(dataLists.get(k));
+        	int MinValue = Collections.min(dataLists.get(k));
+        	for(Dot d: drawDotLists.get(k)){
+        		if(POPUP_TYPE == All)
+        			drawPopup(canvas, String.valueOf(d.data), d.getPoint(),PopupColorArray[k%3]);
+        		else if(POPUP_TYPE == MAXMIN_ONLY){
+        			if(d.data == MaxValue)
+        				drawPopup(canvas, String.valueOf(d.data), d.getPoint(),PopupColorArray[k%3]);
+        			if(d.data == MinValue)
+        				drawPopup(canvas, String.valueOf(d.data), d.getPoint(),PopupColorArray[k%3]);
+        		}
+        	}
+        }
+// 선택한 dot 만 popup 이 뜨게 한다.        
         if(showPopup && selectedDot != null){
             drawPopup(canvas,
                     String.valueOf(selectedDot.data),
-                    selectedDot.getPoint());
+                    selectedDot.getPoint(),PopupColorArray[selectedDot.linenumber%3]);
         }
     }
 
@@ -256,13 +324,14 @@ public class LineView extends View {
      *
      * @param canvas  The canvas you need to draw on.
      * @param point   The Point consists of the x y coordinates from left bottom to right top.
-     *                Like is ↓
+     *                Like is ��     
+     *                
      *                3
      *                2
      *                1
      *                0 1 2 3 4 5
      */
-    private void drawPopup(Canvas canvas,String num, Point point){
+    private void drawPopup(Canvas canvas,String num, Point point,int PopupColor){
         boolean singularNum = (num.length() == 1);
         int sidePadding = MyUtils.dip2px(getContext(),singularNum? 8:5);
         int x = point.x;
@@ -274,8 +343,7 @@ public class LineView extends View {
                 x + popupTextRect.width()/2+sidePadding,
                 y+popupTopPadding-popupBottomMargin);
 
-        NinePatchDrawable popup = (NinePatchDrawable)getResources().
-                getDrawable(R.drawable.popup_red);
+        NinePatchDrawable popup = (NinePatchDrawable)getResources().getDrawable(PopupColor);
         popup.setBounds(r);
         popup.draw(canvas);
         canvas.drawText(num, x, y-bottomTriangleHeight-popupBottomMargin, popupTextPaint);
@@ -291,35 +359,42 @@ public class LineView extends View {
         return r.height();
     }
 
+    //도트그리기
     private void drawDots(Canvas canvas){
         Paint bigCirPaint = new Paint();
         bigCirPaint.setAntiAlias(true);
-        bigCirPaint.setColor(Color.parseColor("#FF0033"));
         Paint smallCirPaint = new Paint(bigCirPaint);
         smallCirPaint.setColor(Color.parseColor("#FFFFFF"));
-        if(drawDotList!=null && !drawDotList.isEmpty()){
-            for(Dot dot : drawDotList){
-                canvas.drawCircle(dot.x,dot.y,DOT_OUTER_CIR_RADIUS,bigCirPaint);
-                canvas.drawCircle(dot.x,dot.y,DOT_INNER_CIR_RADIUS,smallCirPaint);
-            }
+        if(drawDotLists!=null && !drawDotLists.isEmpty()){
+        	for(int k=0; k < drawDotLists.size(); k++){	
+        		bigCirPaint.setColor(Color.parseColor(ColorArray[k%3]));
+        		for(Dot dot : drawDotLists.get(k)){
+                	canvas.drawCircle(dot.x,dot.y,DOT_OUTER_CIR_RADIUS,bigCirPaint);
+                	canvas.drawCircle(dot.x,dot.y,DOT_INNER_CIR_RADIUS,smallCirPaint);
+            	}
+        	}
         }
     }
 
+    //선그리기
     private void drawLines(Canvas canvas){
         Paint linePaint = new Paint();
         linePaint.setAntiAlias(true);
-        linePaint.setColor(Color.parseColor("#FF0033"));
         linePaint.setStrokeWidth(MyUtils.dip2px(getContext(), 2));
-        for(int i=0; i<drawDotList.size()-1; i++){
-            canvas.drawLine(drawDotList.get(i).x,
-                    drawDotList.get(i).y,
-                    drawDotList.get(i+1).x,
-                    drawDotList.get(i+1).y,
-                    linePaint);
+        for(int k = 0; k<drawDotLists.size(); k ++){
+        	linePaint.setColor(Color.parseColor(ColorArray[k%3]));
+	        for(int i=0; i<drawDotLists.get(k).size()-1; i++){
+	            canvas.drawLine(drawDotLists.get(k).get(i).x,
+	                    drawDotLists.get(k).get(i).y,
+	                    drawDotLists.get(k).get(i+1).x,
+	                    drawDotLists.get(k).get(i+1).y,
+	                    linePaint);
+	        }
         }
     }
-
-    private void drawBackgroundLines(Canvas canvas){
+    
+    
+     private void drawBackgroundLines(Canvas canvas){
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(MyUtils.dip2px(getContext(),1f));
@@ -335,26 +410,32 @@ public class LineView extends View {
                     mViewHeight - bottomTextTopMargin - bottomTextHeight-bottomTextDescent,
                     paint);
         }
-
+        
         //draw dotted lines
-//        paint.setPathEffect(effects);
-//        Path dottedPath = new Path();
-        for(int i=0;i<yCoordinateList.size();i++){
-            if((yCoordinateList.size()-1-i)%dataOfAGird == 0){
-//                dottedPath.moveTo(0, yCoordinateList.get(i));
-//                dottedPath.lineTo(getWidth(), yCoordinateList.get(i));
-                canvas.drawLine(0,yCoordinateList.get(i),getWidth(),yCoordinateList.get(i),paint);
-//                canvas.drawPath(dottedPath, paint);
-            }
-        }
-
-        //draw bottom text
-        if(bottomTextList != null){
-            for(int i=0;i<bottomTextList.size();i++){
-                canvas.drawText(bottomTextList.get(i), sideLineLength+backgroundGridWidth*i,
-                        mViewHeight-bottomTextDescent, bottomTextPaint);
-            }
-        }
+      paint.setPathEffect(effects);
+      Path dottedPath = new Path();
+      for(int i=0;i<yCoordinateList.size();i++){
+          if((yCoordinateList.size()-1-i)%dataOfAGird == 0){
+              dottedPath.moveTo(0, yCoordinateList.get(i));
+              dottedPath.lineTo(getWidth(), yCoordinateList.get(i));
+              canvas.drawPath(dottedPath, paint);
+          }
+      }
+    	  //draw bottom text
+      if(bottomTextList != null){
+    	  for(int i=0;i<bottomTextList.size();i++){
+    		  canvas.drawText(bottomTextList.get(i), sideLineLength+backgroundGridWidth*i, mViewHeight-bottomTextDescent, bottomTextPaint);
+    	  }
+      }
+      
+      if(!DOTLINE){
+    	//draw nomal lines
+          for(int i=0;i<yCoordinateList.size();i++){
+              if((yCoordinateList.size()-1-i)%dataOfAGird == 0){
+                  canvas.drawLine(0,yCoordinateList.get(i),getWidth(),yCoordinateList.get(i),paint);
+              }
+          }
+      }
     }
 
     @Override
@@ -400,17 +481,19 @@ public class LineView extends View {
         point.y = (int) event.getY();
         Region r = new Region();
         int width = backgroundGridWidth/2;
-        if(drawDotList != null || !drawDotList.isEmpty()){
-            for(Dot dot : drawDotList){
-                r.set(dot.x-width,dot.y-width,dot.x+width,dot.y+width);
-                if (r.contains(point.x,point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
-                    selectedDot = dot;
-                }else if (event.getAction() == MotionEvent.ACTION_UP){
-                    if (r.contains(point.x,point.y)){
-                        showPopup = true;
-                    }
-                }
-            }
+        if(drawDotLists != null || !drawDotLists.isEmpty()){
+	        for(ArrayList<Dot> data : drawDotLists){
+	        	for(Dot dot : data){
+	        		r.set(dot.x-width,dot.y-width,dot.x+width,dot.y+width);
+	                if (r.contains(point.x,point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
+	                    selectedDot = dot;
+	                }else if (event.getAction() == MotionEvent.ACTION_UP){
+	                    if (r.contains(point.x,point.y)){
+	                        showPopup = true;
+	                    }
+	                }
+	            }
+	        }
         }
         if (event.getAction() == MotionEvent.ACTION_DOWN ||
                 event.getAction() == MotionEvent.ACTION_UP){
@@ -437,22 +520,25 @@ public class LineView extends View {
         int data;
         int targetX;
         int targetY;
+        int linenumber;
         int velocity = MyUtils.dip2px(getContext(),10);
 
-        Dot(int x,int y,int targetX,int targetY,Integer data){
+        Dot(int x,int y,int targetX,int targetY,Integer data,int linenumber){
             this.x = x;
             this.y = y;
-            setTargetData(targetX, targetY,data);
+            this.linenumber = linenumber;
+            setTargetData(targetX, targetY,data,linenumber);
         }
 
         Point getPoint(){
             return new Point(x,y);
         }
 
-        Dot setTargetData(int targetX,int targetY,Integer data){
+        Dot setTargetData(int targetX,int targetY,Integer data,int linenumber){
             this.targetX = targetX;
             this.targetY = targetY;
             this.data = data;
+            this.linenumber = linenumber;
             return this;
         }
 
