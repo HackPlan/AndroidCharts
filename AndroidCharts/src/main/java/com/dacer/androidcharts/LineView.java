@@ -52,10 +52,10 @@ public class LineView extends View {
 
 	private Dot selectedDot;
 
-    private int topLineLength = MyUtils.dip2px(getContext(), 12);; // | | ��this
+    private int topLineLength = MyUtils.dip2px(getContext(), 12);; // | | ←this
                                                                    //-+-+-
     private int sideLineLength = MyUtils.dip2px(getContext(),45)/3*2;// --+--+--+--+--+--+--
-                                                                     //  ��this           ��    
+                                                                     //  ↑this
     private int backgroundGridWidth = MyUtils.dip2px(getContext(),45);
 
     //Constants
@@ -71,24 +71,24 @@ public class LineView extends View {
     private final int BACKGROUND_LINE_COLOR = Color.parseColor("#EEEEEE");
     private final int BOTTOM_TEXT_COLOR = Color.parseColor("#9B9A9B");
     
-    public final int All = 1;
-    public final int MAXMIN_ONLY = 2;
-    public final int NONE = 3;
+    public static final int SHOW_POPUPS_All = 1;
+    public static final int SHOW_POPUPS_MAXMIN_ONLY = 2;
+    public static final int SHOW_POPUPS_NONE = 3;
 
-    private int POPUP_TYPE = MAXMIN_ONLY;
-    public void setPOPUP_TYPE(int pOPUP_TYPE) {
-		POPUP_TYPE = pOPUP_TYPE;
+    private int showPopupType = SHOW_POPUPS_NONE;
+    public void setShowPopup(int popupType) {
+		this.showPopupType = popupType;
 	}
 
 	//점선표시
-    private Boolean DOTLINE = false;
+    private Boolean drawDotLine = false;
     //라인컬러
     private String[] ColorArray = {"#e74c3c","#2980b9","#1abc9c"};
     //popup 컬러
     private int[] PopupColorArray = {R.drawable.popup_red,R.drawable.popup_blue,R.drawable.popup_green}; 
     
-	public void setDOTLINE(Boolean dOTLINE) {
-		DOTLINE = dOTLINE;
+	public void setDrawDotLine(Boolean drawDotLine) {
+		this.drawDotLine = drawDotLine;
 	}
 
 	private Runnable animator = new Runnable() {
@@ -104,7 +104,7 @@ public class LineView extends View {
                 }
             }
             if (needNewFrame) {
-                postDelayed(this, 20);
+                postDelayed(this, 25);
             }
             invalidate();
         }
@@ -168,7 +168,7 @@ public class LineView extends View {
 
     /**
      *
-     * @param dataList The Integer ArrayList for showing,
+     * @param dataLists The Integer ArrayLists for showing,
      *                 dataList.size() must < bottomTextList.size()
      */
     public void setDataList(ArrayList<ArrayList<Integer>> dataLists){
@@ -302,9 +302,9 @@ public class LineView extends View {
         	int MaxValue = Collections.max(dataLists.get(k));
         	int MinValue = Collections.min(dataLists.get(k));
         	for(Dot d: drawDotLists.get(k)){
-        		if(POPUP_TYPE == All)
+        		if(showPopupType == SHOW_POPUPS_All)
         			drawPopup(canvas, String.valueOf(d.data), d.getPoint(),PopupColorArray[k%3]);
-        		else if(POPUP_TYPE == MAXMIN_ONLY){
+        		else if(showPopupType == SHOW_POPUPS_MAXMIN_ONLY){
         			if(d.data == MaxValue)
         				drawPopup(canvas, String.valueOf(d.data), d.getPoint(),PopupColorArray[k%3]);
         			if(d.data == MinValue)
@@ -324,7 +324,7 @@ public class LineView extends View {
      *
      * @param canvas  The canvas you need to draw on.
      * @param point   The Point consists of the x y coordinates from left bottom to right top.
-     *                Like is ��     
+     *                Like is
      *                
      *                3
      *                2
@@ -428,8 +428,8 @@ public class LineView extends View {
     	  }
       }
       
-      if(!DOTLINE){
-    	//draw nomal lines
+      if(!drawDotLine){
+    	//draw solid lines
           for(int i=0;i<yCoordinateList.size();i++){
               if((yCoordinateList.size()-1-i)%dataOfAGird == 0){
                   canvas.drawLine(0,yCoordinateList.get(i),getWidth(),yCoordinateList.get(i),paint);
@@ -502,17 +502,7 @@ public class LineView extends View {
         return true;
     }
 
-    private int updateSelf(int origin, int target, int velocity){
-        if (origin < target) {
-            origin += velocity;
-        } else if (origin > target){
-            origin-= velocity;
-        }
-        if(Math.abs(target-origin)<velocity){
-            origin = target;
-        }
-        return origin;
-    }
+
     
     class Dot{
         int x;
@@ -521,7 +511,7 @@ public class LineView extends View {
         int targetX;
         int targetY;
         int linenumber;
-        int velocity = MyUtils.dip2px(getContext(),10);
+        int velocity = MyUtils.dip2px(getContext(),18);
 
         Dot(int x,int y,int targetX,int targetY,Integer data,int linenumber){
             this.x = x;
@@ -549,6 +539,18 @@ public class LineView extends View {
         void update(){
             x = updateSelf(x, targetX, velocity);
             y = updateSelf(y, targetY, velocity);
+        }
+
+        private int updateSelf(int origin, int target, int velocity){
+            if (origin < target) {
+                origin += velocity;
+            } else if (origin > target){
+                origin-= velocity;
+            }
+            if(Math.abs(target-origin)<velocity){
+                origin = target;
+            }
+            return origin;
         }
     }
 }
