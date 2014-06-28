@@ -31,7 +31,7 @@ public class LineView extends View {
     private boolean autoSetGridWidth = true;
     private int dataOfAGird = 10;
     private int bottomTextHeight = 0;
-    private ArrayList<String> bottomTextList;
+    private ArrayList<String> bottomTextList = new ArrayList<String>();
     
     private ArrayList<ArrayList<Integer>> dataLists;
     private ArrayList<Integer> dataList;
