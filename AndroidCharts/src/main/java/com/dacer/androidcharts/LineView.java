@@ -88,6 +88,9 @@ public class LineView extends View {
     private String[] colorArray = {"#e74c3c","#2980b9","#1abc9c"};
     //popup 컬러
     private int[] popupColorArray = {R.drawable.popup_red,R.drawable.popup_blue,R.drawable.popup_green};
+
+    // onDraw optimisations
+    private final Point tmpPoint = new Point();
     
 	public void setDrawDotLine(Boolean drawDotLine) {
 		this.drawDotLine = drawDotLine;
@@ -305,12 +308,12 @@ public class LineView extends View {
         	int MinValue = Collections.min(dataLists.get(k));
         	for(Dot d: drawDotLists.get(k)){
         		if(showPopupType == SHOW_POPUPS_All)
-        			drawPopup(canvas, String.valueOf(d.data), d.getPoint(),popupColorArray[k%3]);
+        			drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),popupColorArray[k%3]);
         		else if(showPopupType == SHOW_POPUPS_MAXMIN_ONLY){
         			if(d.data == MaxValue)
-        				drawPopup(canvas, String.valueOf(d.data), d.getPoint(),popupColorArray[k%3]);
+        				drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),popupColorArray[k%3]);
         			if(d.data == MinValue)
-        				drawPopup(canvas, String.valueOf(d.data), d.getPoint(),popupColorArray[k%3]);
+        				drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),popupColorArray[k%3]);
         		}
         	}
         }
@@ -318,7 +321,7 @@ public class LineView extends View {
         if(showPopup && selectedDot != null){
             drawPopup(canvas,
                     String.valueOf(selectedDot.data),
-                    selectedDot.getPoint(),popupColorArray[selectedDot.linenumber%3]);
+                    selectedDot.setupPoint(tmpPoint),popupColorArray[selectedDot.linenumber%3]);
         }
     }
 
@@ -532,8 +535,9 @@ public class LineView extends View {
             setTargetData(targetX, targetY,data,linenumber);
         }
 
-        Point getPoint(){
-            return new Point(x,y);
+        Point setupPoint(Point point) {
+            point.set(x, y);
+            return point;
         }
 
         Dot setTargetData(int targetX,int targetY,Integer data,int linenumber){
