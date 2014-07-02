@@ -23,6 +23,7 @@ import android.view.View;
 /**
  * Created by Dacer on 11/4/13.
  * Edited by Lee youngchan 21/1/14
+ * Edited by dector 30-Jun-2014
  */
 public class LineView extends View {
     private int mViewHeight;
@@ -50,6 +51,7 @@ public class LineView extends View {
     private final int bottomTriangleHeight = 12;
     public boolean showPopup = true; 
 
+	private Dot pointToSelect;
 	private Dot selectedDot;
 
     private int topLineLength = MyUtils.dip2px(getContext(), 12);; // | | ←this
@@ -86,6 +88,9 @@ public class LineView extends View {
     private String[] colorArray = {"#e74c3c","#2980b9","#1abc9c"};
     //popup 컬러
     private int[] popupColorArray = {R.drawable.popup_red,R.drawable.popup_blue,R.drawable.popup_green};
+
+    // onDraw optimisations
+    private final Point tmpPoint = new Point();
     
 	public void setDrawDotLine(Boolean drawDotLine) {
 		this.drawDotLine = drawDotLine;
@@ -303,12 +308,12 @@ public class LineView extends View {
         	int MinValue = Collections.min(dataLists.get(k));
         	for(Dot d: drawDotLists.get(k)){
         		if(showPopupType == SHOW_POPUPS_All)
-        			drawPopup(canvas, String.valueOf(d.data), d.getPoint(),popupColorArray[k%3]);
+        			drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),popupColorArray[k%3]);
         		else if(showPopupType == SHOW_POPUPS_MAXMIN_ONLY){
         			if(d.data == MaxValue)
-        				drawPopup(canvas, String.valueOf(d.data), d.getPoint(),popupColorArray[k%3]);
+        				drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),popupColorArray[k%3]);
         			if(d.data == MinValue)
-        				drawPopup(canvas, String.valueOf(d.data), d.getPoint(),popupColorArray[k%3]);
+        				drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),popupColorArray[k%3]);
         		}
         	}
         }
@@ -316,7 +321,7 @@ public class LineView extends View {
         if(showPopup && selectedDot != null){
             drawPopup(canvas,
                     String.valueOf(selectedDot.data),
-                    selectedDot.getPoint(),popupColorArray[selectedDot.linenumber%3]);
+                    selectedDot.setupPoint(tmpPoint),popupColorArray[selectedDot.linenumber%3]);
         }
     }
 
@@ -476,30 +481,40 @@ public class LineView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Point point = new Point();
-        point.x = (int) event.getX();
-        point.y = (int) event.getY();
-        Region r = new Region();
-        int width = backgroundGridWidth/2;
-        if(drawDotLists != null || !drawDotLists.isEmpty()){
-	        for(ArrayList<Dot> data : drawDotLists){
-	        	for(Dot dot : data){
-	        		r.set(dot.x-width,dot.y-width,dot.x+width,dot.y+width);
-	                if (r.contains(point.x,point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
-	                    selectedDot = dot;
-	                }else if (event.getAction() == MotionEvent.ACTION_UP){
-	                    if (r.contains(point.x,point.y)){
-	                        showPopup = true;
-	                    }
-	                }
-	            }
-	        }
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            pointToSelect = findPointAt((int) event.getX(), (int) event.getY());
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (pointToSelect != null) {
+                selectedDot = pointToSelect;
+                pointToSelect = null;
+                postInvalidate();
+            }
         }
-        if (event.getAction() == MotionEvent.ACTION_DOWN ||
-                event.getAction() == MotionEvent.ACTION_UP){
-            postInvalidate();
-        }
+
         return true;
+    }
+
+    private Dot findPointAt(int x, int y) {
+        if (drawDotLists.isEmpty()) {
+            return null;
+        }
+
+        final int width = backgroundGridWidth/2;
+        final Region r = new Region();
+
+        for (ArrayList<Dot> data : drawDotLists) {
+            for (Dot dot : data) {
+                final int pointX = dot.x;
+                final int pointY = dot.y;
+
+                r.set(pointX - width, pointY - width, pointX + width, pointY + width);
+                if (r.contains(x, y)){
+                    return dot;
+                }
+            }
+        }
+
+        return null;
     }
 
 
@@ -520,8 +535,9 @@ public class LineView extends View {
             setTargetData(targetX, targetY,data,linenumber);
         }
 
-        Point getPoint(){
-            return new Point(x,y);
+        Point setupPoint(Point point) {
+            point.set(x, y);
+            return point;
         }
 
         Dot setTargetData(int targetX,int targetY,Integer data,int linenumber){
