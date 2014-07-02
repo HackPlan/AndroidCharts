@@ -27,7 +27,7 @@ public class BarView extends View {
     private boolean autoSetWidth = true;
     private int topMargin;
     private int bottomTextHeight;
-    private ArrayList<String> bottomTextList;
+    private ArrayList<String> bottomTextList = new ArrayList<String>();
     private final int MINI_BAR_WIDTH;
     private final int BAR_SIDE_MARGIN;
     private final int TEXT_TOP_MARGIN;
