@@ -446,7 +446,8 @@ public class LineView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int mViewWidth = measureWidth(widthMeasureSpec);
-        mViewHeight = measureHeight(heightMeasureSpec);
+        //mViewHeight = measureHeight(heightMeasureSpec);
+        mViewHeight = MeasureSpec.getSize(measureSpec);
         refreshAfterDataChanged();
         setMeasuredDimension(mViewWidth,mViewHeight);
     }
