@@ -148,10 +148,18 @@ public class BarView extends View {
                         (BAR_SIDE_MARGIN+barWidth)* i,
                         getHeight()-bottomTextHeight-TEXT_TOP_MARGIN);
                 canvas.drawRect(rect,bgPaint);
-                rect.set(BAR_SIDE_MARGIN*i+barWidth*(i-1),
+                /*rect.set(BAR_SIDE_MARGIN*i+barWidth*(i-1),
                         topMargin+(int)((getHeight()-topMargin)*percentList.get(i-1)),
                         (BAR_SIDE_MARGIN+barWidth)* i,
-                        getHeight()-bottomTextHeight-TEXT_TOP_MARGIN);
+                        getHeight()-bottomTextHeight-TEXT_TOP_MARGIN);*/
+				/**
+				  * The correct total height is "getHeight()-topMargin-bottomTextHeight-TEXT_TOP_MARGIN",not "getHeight()-topMargin".
+				  * fix by zhenghuiy@gmail.com on 11/11/13.
+				  */
+				rect.set(BAR_SIDE_MARGIN*i+barWidth*(i-1),
+                        topMargin+(int)((getHeight()-topMargin-bottomTextHeight-TEXT_TOP_MARGIN)*percentList.get(i-1)),
+                        (BAR_SIDE_MARGIN+barWidth)* i,
+                        getHeight()-bottomTextHeight-TEXT_TOP_MARGIN);		
                 canvas.drawRect(rect,fgPaint);
                 i++;
             }
