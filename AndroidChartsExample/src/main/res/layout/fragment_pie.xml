@@ -7,7 +7,7 @@
     <view
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        class="com.dacer.androidcharts.PieView"
+        class="com.dacer.androidcharts.ClockPieView"
         android:id="@+id/pie_view"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />

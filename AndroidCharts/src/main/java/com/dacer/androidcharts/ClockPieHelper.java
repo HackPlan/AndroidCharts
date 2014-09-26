@@ -4,7 +4,7 @@ package com.dacer.androidcharts;
 /**
  * Created by Dacer on 11/14/13.
  */
-public class PieHelper {
+public class ClockPieHelper {
 
     private float start;
     private float end;
@@ -12,14 +12,14 @@ public class PieHelper {
     private float targetEnd;
     int velocity = 5;
 
-    public PieHelper(float startDegree, float endDegree, PieHelper targetPie){
+    public ClockPieHelper(float startDegree, float endDegree, ClockPieHelper targetPie){
         start = startDegree;
         end = endDegree;
         targetStart = targetPie.getStart();
         targetEnd = targetPie.getEnd();
     }
 
-    public PieHelper(int startHour,int startMin,int endHour,int endMin){
+    public ClockPieHelper(int startHour, int startMin, int endHour, int endMin){
         start = 270+startHour*15+startMin*15/60;
         end = 270+endHour*15+endMin*15/60;
         while(end<start){
@@ -27,7 +27,7 @@ public class PieHelper {
         }
     }
 
-    public PieHelper(int startHour,int startMin,int startSec,int endHour,int endMin,int endSec){
+    public ClockPieHelper(int startHour, int startMin, int startSec, int endHour, int endMin, int endSec){
         start = 270+startHour*15+startMin*15/60+startSec*15/3600;
         end = 270+endHour*15+endMin*15/60+endSec*15/3600;
         while(end<start){
@@ -35,13 +35,13 @@ public class PieHelper {
         }
     }
 
-    PieHelper setTarget(float targetStart,float targetEnd){
+    ClockPieHelper setTarget(float targetStart,float targetEnd){
         this.targetStart = targetStart;
         this.targetEnd = targetEnd;
         return this;
     }
 
-    PieHelper setTarget(PieHelper targetPie){
+    ClockPieHelper setTarget(ClockPieHelper targetPie){
         targetStart = targetPie.getStart();
         targetEnd = targetPie.getEnd();
         return this;

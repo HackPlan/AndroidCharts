@@ -59,13 +59,13 @@ barView.setDataList(dataList,100);
 <view
     android:layout_width="wrap_content"
     android:layout_height="300dp"
-    class="com.dacer.androidcharts.PieView"
-    android:id="@+id/pie_view" />
+    class="com.dacer.androidcharts.ClockPieView"
+    android:id="@+id/clock_pie_view" />
 ```
 
 ```java
-PieView pieView = (PieView)findViewById(R.id.pie_view);
-ArrayList<PieHelper> pieHelperArrayList = new ArrayList<PieHelper>();
+ClockPieView pieView = (ClockPieView)findViewById(R.id.clock_pie_view);
+ArrayList<ClockPieHelper> pieHelperArrayList = new ArrayList<ClockPieHelper>();
 pieView.setDate(pieHelperArrayList);
 ```
 

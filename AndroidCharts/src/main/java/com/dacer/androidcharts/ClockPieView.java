@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Created by Dacer on 11/13/13.
  */
-public class PieView extends View {
+public class ClockPieView extends View {
 
     private Paint textPaint;
     private Paint redPaint;
@@ -37,7 +37,7 @@ public class PieView extends View {
     private RectF cirRect;
     private Rect textRect;
 
-    private ArrayList<PieHelper> pieArrayList = new ArrayList<PieHelper>();
+    private ArrayList<ClockPieHelper> pieArrayList = new ArrayList<ClockPieHelper>();
 
     private final int TEXT_COLOR = Color.parseColor("#9B9A9B");
     private final int GRAY_COLOR = Color.parseColor("#D4D3D4");
@@ -47,7 +47,7 @@ public class PieView extends View {
         @Override
         public void run() {
             boolean needNewFrame = false;
-            for(PieHelper pie : pieArrayList){
+            for(ClockPieHelper pie : pieArrayList){
                 pie.update();
                 if(!pie.isAtRest()){
                     needNewFrame = true;
@@ -60,10 +60,10 @@ public class PieView extends View {
         }
     };
 
-    public PieView(Context context){
+    public ClockPieView(Context context){
         this(context,null);
     }
-    public PieView(Context context, AttributeSet attrs){
+    public ClockPieView(Context context, AttributeSet attrs){
         super(context, attrs);
         textSize = MyUtils.sp2px(context, 15);
         lineThickness = MyUtils.dip2px(context, 1);
@@ -94,13 +94,13 @@ public class PieView extends View {
         topTextHeight = textRect.height();
     }
 
-    public void setDate(ArrayList<PieHelper> helperList){
+    public void setDate(ArrayList<ClockPieHelper> helperList){
         if(helperList != null && !helperList.isEmpty()){
             int pieSize = pieArrayList.isEmpty()? 0:pieArrayList.size();
             for(int i=0;i<helperList.size();i++){
                 if(i>pieSize-1){
 //                    float mStart = helperList.get(i).getStart();
-                    pieArrayList.add(new PieHelper(0,0,helperList.get(i)));
+                    pieArrayList.add(new ClockPieHelper(0,0,helperList.get(i)));
                 }else{
                     pieArrayList.set(i, pieArrayList.get(i).setTarget(helperList.get(i)));
                 }
@@ -121,7 +121,7 @@ public class PieView extends View {
     protected void onDraw(Canvas canvas) {
         drawBackground(canvas);
         if(pieArrayList != null){
-            for(PieHelper helper:pieArrayList){
+            for(ClockPieHelper helper:pieArrayList){
                 canvas.drawArc(cirRect,helper.getStart(),helper.getSweep(),true,redPaint);
             }
         }
