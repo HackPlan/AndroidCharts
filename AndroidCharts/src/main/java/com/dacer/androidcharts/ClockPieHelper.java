@@ -12,7 +12,7 @@ public class ClockPieHelper {
     private float targetEnd;
     int velocity = 5;
 
-    public ClockPieHelper(float startDegree, float endDegree, ClockPieHelper targetPie){
+    ClockPieHelper(float startDegree, float endDegree, ClockPieHelper targetPie){
         start = startDegree;
         end = endDegree;
         targetStart = targetPie.getStart();
