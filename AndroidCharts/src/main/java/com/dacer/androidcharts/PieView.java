@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ import java.util.ArrayList;
  * Created by Dacer on 9/26/14.
  */
 public class PieView extends View {
+
+    public interface OnPieClickListener{
+        void onPieClick(int index);
+    }
 
     private Paint cirPaint;
     private Paint whiteLinePaint;
@@ -28,6 +33,8 @@ public class PieView extends View {
     private int mViewHeight;
     private int margin;
     private int pieRadius;
+
+    private OnPieClickListener onPieClickListener;
 
     private ArrayList<PieHelper> pieHelperList;
     private int selectedIndex = NO_SELECTED_INDEX;
@@ -85,6 +92,10 @@ public class PieView extends View {
     public void showPercentLabel(boolean show){
         showPercentLabel = show;
         postInvalidate();
+    }
+
+    public void setOnPieClickListener(OnPieClickListener listener){
+        onPieClickListener = listener;
     }
 
     public void setDate(ArrayList<PieHelper> helperList){
@@ -197,6 +208,38 @@ public class PieView extends View {
         float x = (float)(mViewHeight/2 + Math.cos(Math.toRadians(-angel)) * pieRadius/2);
         float y = (float)(mViewHeight/2 + sth * Math.abs(Math.sin(Math.toRadians(-angel))) * pieRadius/2);
         canvas.drawText(pieHelper.getTitle(), x, y, textPaint);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN ||event.getAction() == MotionEvent.ACTION_MOVE){
+            selectedIndex = findPointAt((int) event.getX(), (int) event.getY());
+            if(onPieClickListener != null){
+                onPieClickListener.onPieClick(selectedIndex);
+            }
+            postInvalidate();
+        }
+
+        return true;
+    }
+
+    /**
+     * find pie index where point is
+     * @param x
+     * @param y
+     * @return
+     */
+    private int findPointAt(int x, int y){
+        double degree = Math.atan2(x-pieCenterPoint.x, y-pieCenterPoint.y)* 180 / Math.PI;
+        degree = -(degree-180) + 270;
+        int index = 0;
+        for(PieHelper pieHelper:pieHelperList){
+            if(degree>=pieHelper.getStartDegree() && degree<=pieHelper.getEndDegree()){
+                return index;
+            }
+            index++;
+        }
+        return NO_SELECTED_INDEX;
     }
 
     @Override

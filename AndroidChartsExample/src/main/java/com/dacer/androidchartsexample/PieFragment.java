@@ -58,11 +58,11 @@ public class PieFragment extends Fragment {
 
     private void set(PieView pieView){
         ArrayList<PieHelper> pieHelperArrayList = new ArrayList<PieHelper>();
-        pieHelperArrayList.add(new PieHelper(20, Color.BLUE));
-        pieHelperArrayList.add(new PieHelper(6, Color.RED));
-        pieHelperArrayList.add(new PieHelper(30, Color.GRAY));
-        pieHelperArrayList.add(new PieHelper(12, Color.BLACK));
-        pieHelperArrayList.add(new PieHelper(32, Color.YELLOW));
+        pieHelperArrayList.add(new PieHelper(20, Color.BLACK));
+        pieHelperArrayList.add(new PieHelper(6));
+        pieHelperArrayList.add(new PieHelper(30));
+        pieHelperArrayList.add(new PieHelper(12));
+        pieHelperArrayList.add(new PieHelper(32));
 
         pieView.setDate(pieHelperArrayList);
         pieView.setSelectedIndex(2);
