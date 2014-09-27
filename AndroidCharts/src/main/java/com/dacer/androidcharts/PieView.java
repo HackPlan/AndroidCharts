@@ -253,10 +253,10 @@ public class PieView extends View {
                 pieCenterPoint.y-pieRadius,
                 pieCenterPoint.x+pieRadius,
                 pieCenterPoint.y+pieRadius);
-        cirSelectedRect.set(0,
-                0,
-                mViewWidth,
-                mViewHeight);
+        cirSelectedRect.set(2, //minor margin for bigger circle
+                2,
+                mViewWidth-2,
+                mViewHeight-2);
         setMeasuredDimension(mViewWidth, mViewHeight);
     }
 
