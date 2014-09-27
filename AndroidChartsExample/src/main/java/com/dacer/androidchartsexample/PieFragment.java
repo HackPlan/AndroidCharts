@@ -7,15 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
-import com.dacer.androidcharts.ClockPieHelper;
-import com.dacer.androidcharts.ClockPieView;
 import com.dacer.androidcharts.PieHelper;
 import com.dacer.androidcharts.PieView;
-import com.dacer.androidcharts.TempLog;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Dacer on 11/16/13.
@@ -51,7 +48,7 @@ public class PieFragment extends Fragment {
             pieHelperArrayList.add(new PieHelper(100f*intList.get(i)/totalInt));
         }
 
-        pieView.setSelectedIndex(PieView.NO_SELECTED_INDEX);
+        pieView.selectedPie(PieView.NO_SELECTED_INDEX);
         pieView.showPercentLabel(true);
         pieView.setDate(pieHelperArrayList);
     }
@@ -65,6 +62,12 @@ public class PieFragment extends Fragment {
         pieHelperArrayList.add(new PieHelper(32));
 
         pieView.setDate(pieHelperArrayList);
-        pieView.setSelectedIndex(2);
+        pieView.selectedPie(2);
+        pieView.setOnPieClickListener(new PieView.OnPieClickListener() {
+            @Override
+            public void onPieClick(int index) {
+                Toast.makeText(getActivity(), index+" selected",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

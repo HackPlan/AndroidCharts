@@ -57,8 +57,8 @@ barView.setDataList(dataList,100);
 
 ```xml
 <view
-    android:layout_width="wrap_content"
-    android:layout_height="300dp"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
     class="com.dacer.androidcharts.ClockPieView"
     android:id="@+id/clock_pie_view" />
 ```
@@ -67,6 +67,27 @@ barView.setDataList(dataList,100);
 ClockPieView pieView = (ClockPieView)findViewById(R.id.clock_pie_view);
 ArrayList<ClockPieHelper> pieHelperArrayList = new ArrayList<ClockPieHelper>();
 pieView.setDate(pieHelperArrayList);
+```
+
+#### Pie Chart
+
+![Pie Chart](https://raw.github.com/dacer/AndroidCharts/master/pic/pie2.png)
+
+```xml
+<view
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    class="com.dacer.androidcharts.PieView"
+    android:id="@+id/pie_view" />
+```
+
+```java
+PieView pieView = (PieView)findViewById(R.id.pie_view);
+ArrayList<PieHelper> pieHelperArrayList = new ArrayList<PieHelper>();
+pieView.setDate(pieHelperArrayList);
+pieView.selectedPie(2); //optional
+pieView.setOnPieClickListener(listener) //optional
+pieView.showPercentLabel(false); //optional
 ```
 
 ## License

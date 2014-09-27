@@ -100,37 +100,21 @@ public class PieView extends View {
 
     public void setDate(ArrayList<PieHelper> helperList){
         initPies(helperList);
-//        pieHelperList.clear();
-//        if(helperList != null && !helperList.isEmpty()){
-//            for(PieHelper pieHelper:helperList){
-//                pieHelperList.add(new PieHelper(0,0,pieHelper));
-//            }
-//        }
+        pieHelperList.clear();
 
+        if(helperList != null && !helperList.isEmpty()){
+            for(PieHelper pieHelper:helperList){
+                pieHelperList.add(new PieHelper(pieHelper.getStartDegree(),pieHelper.getStartDegree(),pieHelper));
+            }
+        }else {
+            pieHelperList.clear();
+        }
 
+        removeCallbacks(animator);
+        post(animator);
 
-//        if(helperList != null && !helperList.isEmpty()){
-//            int pieSize = pieHelperList.isEmpty()? 0:pieHelperList.size();
-//            for(int i=0;i<helperList.size();i++){
-//                if(i > pieSize-1){
-//                    pieHelperList.add(new PieHelper(0,0,helperList.get(i)));
-//                }else{
-//                    pieHelperList.set(i, pieHelperList.get(i).setTarget(helperList.get(i)));
-//                }
-//            }
-//            int temp = pieHelperList.size() - helperList.size();
-//            for(int i=0; i<temp; i++){
-//                pieHelperList.remove(pieHelperList.size()-1);
-//            }
-//        }else {
-//            pieHelperList.clear();
-//        }
-
-//        removeCallbacks(animator);
-//        post(animator);
-
-        pieHelperList = helperList;
-        postInvalidate();
+//        pieHelperList = helperList;
+//        postInvalidate();
     }
 
     /**
@@ -145,8 +129,13 @@ public class PieView extends View {
         }
     }
 
-    public void setSelectedIndex(int index){
+    public void selectedPie(int index){
         selectedIndex = index;
+        postInvalidate();
+    }
+
+    public void removeSelectedPie(){
+        selectedIndex = NO_SELECTED_INDEX;
         postInvalidate();
     }
 

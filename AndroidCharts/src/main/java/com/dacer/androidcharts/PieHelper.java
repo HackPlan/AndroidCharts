@@ -85,6 +85,7 @@ public class PieHelper {
     void update(){
         this.startDegree = updateSelf(startDegree, targetStartDegree, velocity);
         this.endDegree = updateSelf(endDegree, targetEndDegree, velocity);
+        this.sweepDegree = endDegree - startDegree;
     }
 
     String getPercentStr(){
