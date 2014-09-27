@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dacer.androidcharts.PieHelper;
@@ -18,9 +19,12 @@ import java.util.ArrayList;
  * Created by Dacer on 11/16/13.
  */
 public class PieFragment extends Fragment {
+    private TextView textView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_pie_s, container, false);
+        textView = (TextView) rootView.findViewById(R.id.textView);
         final PieView pieView = (PieView)rootView.findViewById(R.id.pie_view);
         Button button = (Button)rootView.findViewById(R.id.pie_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -62,12 +66,16 @@ public class PieFragment extends Fragment {
         pieHelperArrayList.add(new PieHelper(32));
 
         pieView.setDate(pieHelperArrayList);
-        pieView.selectedPie(2);
         pieView.setOnPieClickListener(new PieView.OnPieClickListener() {
             @Override
             public void onPieClick(int index) {
-                Toast.makeText(getActivity(), index+" selected",Toast.LENGTH_SHORT).show();
+                if(index != PieView.NO_SELECTED_INDEX) {
+                    textView.setText(index + " selected");
+                }else{
+                    textView.setText("No selected pie");
+                }
             }
         });
+        pieView.selectedPie(2);
     }
 }

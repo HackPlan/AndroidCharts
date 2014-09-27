@@ -101,6 +101,7 @@ public class PieView extends View {
     public void setDate(ArrayList<PieHelper> helperList){
         initPies(helperList);
         pieHelperList.clear();
+        removeSelectedPie();
 
         if(helperList != null && !helperList.isEmpty()){
             for(PieHelper pieHelper:helperList){
@@ -131,11 +132,13 @@ public class PieView extends View {
 
     public void selectedPie(int index){
         selectedIndex = index;
+        if(onPieClickListener!=null) onPieClickListener.onPieClick(index);
         postInvalidate();
     }
 
     public void removeSelectedPie(){
         selectedIndex = NO_SELECTED_INDEX;
+        if(onPieClickListener!=null) onPieClickListener.onPieClick(NO_SELECTED_INDEX);
         postInvalidate();
     }
 
