@@ -51,7 +51,7 @@ public class MainActivity extends Activity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         switch (position){
-            case 3:
+            case 0:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new LineFragment())
                         .commit();
@@ -66,7 +66,7 @@ public class MainActivity extends Activity
                         .replace(R.id.container, new ClockPieFragment())
                         .commit();
                 break;
-            case 0:
+            case 3:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new PieFragment())
                         .commit();
