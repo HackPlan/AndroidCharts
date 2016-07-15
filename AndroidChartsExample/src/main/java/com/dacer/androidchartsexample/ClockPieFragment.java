@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.dacer.androidcharts.ClockPieHelper;
-import com.dacer.androidcharts.ClockPieView;
+import im.dacer.androidcharts.ClockPieHelper;
+import im.dacer.androidcharts.ClockPieView;
 
 import java.util.ArrayList;
 

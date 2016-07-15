@@ -1,4 +1,4 @@
-package com.dacer.androidcharts;
+package im.dacer.androidcharts;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 
 import java.util.ArrayList;
 

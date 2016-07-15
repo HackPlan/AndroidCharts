@@ -35,9 +35,13 @@ android {
             proguardFile 'proguard-rules.txt'
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     compile files('libs/android-support-v4.jar')
-    compile 'im.dacer:AndroidCharts:1.0.0'
+    compile 'im.dacer:AndroidCharts:1.0.1'
 }

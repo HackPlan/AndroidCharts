@@ -1,7 +1,5 @@
-package com.dacer.androidcharts;
+package im.dacer.androidcharts;
 
-
-import android.graphics.Color;
 
 /**
  * Created by Dacer on 11/14/13.

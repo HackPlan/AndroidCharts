@@ -1,4 +1,4 @@
-package com.dacer.androidcharts;
+package im.dacer.androidcharts;
 
 import android.content.Context;
 import android.graphics.Canvas;

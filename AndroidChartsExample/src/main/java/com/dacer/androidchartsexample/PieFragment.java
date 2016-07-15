@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dacer.androidcharts.PieHelper;
-import com.dacer.androidcharts.PieView;
+import im.dacer.androidcharts.PieHelper;
+import im.dacer.androidcharts.PieView;
 
 import java.util.ArrayList;
 

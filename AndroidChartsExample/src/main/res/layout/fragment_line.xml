@@ -12,7 +12,7 @@
     <view
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        class="com.dacer.androidcharts.LineView"
+        class="im.dacer.androidcharts.LineView"
         android:id="@+id/line_view"/>
     </HorizontalScrollView>
 
