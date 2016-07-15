@@ -1,29 +1,31 @@
+apply plugin: 'com.android.application'
+
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:2.1.2'
     }
 }
-apply plugin: 'android'
 
 repositories {
+    jcenter()
     mavenCentral()
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 23
     }
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
         }
     }
@@ -37,5 +39,5 @@ android {
 
 dependencies {
     compile files('libs/android-support-v4.jar')
-    compile project(':AndroidCharts')
+    compile 'im.dacer:AndroidCharts:1.0.0'
 }

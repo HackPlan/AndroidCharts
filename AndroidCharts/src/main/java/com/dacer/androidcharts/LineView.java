@@ -174,7 +174,7 @@ public class LineView extends View {
     /**
      *
      * @param dataLists The Integer ArrayLists for showing,
-     *                 dataList.size() must < bottomTextList.size()
+     *                 dataList.size() must be smaller than bottomTextList.size()
      */
     public void setDataList(ArrayList<ArrayList<Integer>> dataLists){
     	selectedDot = null;
