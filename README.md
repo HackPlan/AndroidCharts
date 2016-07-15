@@ -11,6 +11,12 @@ A simple Android charts library.
 ####Gradle
 
 ```groovy
+repositories {
+    jcenter()
+}
+```
+
+```groovy
 compile 'im.dacer:AndroidCharts:1.0.1'
 ```
 
