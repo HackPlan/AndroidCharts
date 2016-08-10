@@ -1,6 +1,7 @@
 package com.dacer.androidchartsexample;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class LineFragment extends Fragment {
             test.add(String.valueOf(i+1));
         }
         lineView.setBottomTextList(test);
+        lineView.setColorArray(new int[]{Color.BLACK,Color.GREEN,Color.GRAY,Color.CYAN});
         lineView.setDrawDotLine(true);
         lineView.setShowPopup(LineView.SHOW_POPUPS_NONE);
 
