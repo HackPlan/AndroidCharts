@@ -30,7 +30,7 @@ public class LineFragment extends Fragment {
             test.add(String.valueOf(i+1));
         }
         lineView.setBottomTextList(test);
-        lineView.setColorArray(new int[]{Color.BLACK,Color.GREEN,Color.GRAY,Color.CYAN});
+        lineView.setColorArray(new int[]{Color.parseColor("#F44336"),Color.parseColor("#9C27B0"),Color.parseColor("#2196F3"),Color.parseColor("#009688")});
         lineView.setDrawDotLine(true);
         lineView.setShowPopup(LineView.SHOW_POPUPS_NONE);
 
@@ -69,7 +69,7 @@ public class LineFragment extends Fragment {
         ArrayList<ArrayList<Integer>> dataLists = new ArrayList<ArrayList<Integer>>();
         dataLists.add(dataList);
         dataLists.add(dataList2);
-//        dataLists.add(dataList3);
+        dataLists.add(dataList3);
         
         lineView.setDataList(dataLists);
     }
