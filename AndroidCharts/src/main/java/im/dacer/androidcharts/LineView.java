@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.drawable.NinePatchDrawable;
@@ -84,9 +86,7 @@ public class LineView extends View {
 	//점선표시
     private Boolean drawDotLine = false;
     //라인컬러
-    private String[] colorArray = {"#e74c3c","#2980b9","#1abc9c"};
-    //popup 컬러
-    private int[] popupColorArray = {R.drawable.popup_red,R.drawable.popup_blue,R.drawable.popup_green};
+    private int[] colorArray = {Color.parseColor("#e74c3c"),Color.parseColor("#2980b9"),Color.parseColor("#1abc9c")};
 
     // onDraw optimisations
     private final Point tmpPoint = new Point();
@@ -130,6 +130,10 @@ public class LineView extends View {
         bottomTextPaint.setTextAlign(Paint.Align.CENTER);
         bottomTextPaint.setStyle(Paint.Style.FILL);
         bottomTextPaint.setColor(BOTTOM_TEXT_COLOR);
+    }
+
+    public void setColorArray(int[] colors){
+        this.colorArray = colors;
     }
 
     /**
@@ -307,12 +311,15 @@ public class LineView extends View {
         	int MinValue = Collections.min(dataLists.get(k));
         	for(Dot d: drawDotLists.get(k)){
         		if(showPopupType == SHOW_POPUPS_All)
-        			drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),popupColorArray[k%3]);
+        			drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),
+                            colorArray[k%colorArray.length]);
         		else if(showPopupType == SHOW_POPUPS_MAXMIN_ONLY){
         			if(d.data == MaxValue)
-        				drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),popupColorArray[k%3]);
+        				drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),
+                                colorArray[k%colorArray.length]);
         			if(d.data == MinValue)
-        				drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),popupColorArray[k%3]);
+        				drawPopup(canvas, String.valueOf(d.data), d.setupPoint(tmpPoint),
+                                colorArray[k%colorArray.length]);
         		}
         	}
         }
@@ -320,7 +327,7 @@ public class LineView extends View {
         if(showPopup && selectedDot != null){
             drawPopup(canvas,
                     String.valueOf(selectedDot.data),
-                    selectedDot.setupPoint(tmpPoint),popupColorArray[selectedDot.linenumber%3]);
+                    selectedDot.setupPoint(tmpPoint),colorArray[selectedDot.linenumber%colorArray.length]);
         }
     }
 
@@ -347,7 +354,8 @@ public class LineView extends View {
                 x + popupTextRect.width()/2+sidePadding,
                 y+popupTopPadding-popupBottomMargin);
 
-        NinePatchDrawable popup = (NinePatchDrawable)getResources().getDrawable(PopupColor);
+        NinePatchDrawable popup = (NinePatchDrawable)getResources().getDrawable(R.drawable.popup_white);
+        popup.setColorFilter(new PorterDuffColorFilter(PopupColor, PorterDuff.Mode.MULTIPLY));
         popup.setBounds(r);
         popup.draw(canvas);
         canvas.drawText(num, x, y-bottomTriangleHeight-popupBottomMargin, popupTextPaint);
@@ -371,7 +379,7 @@ public class LineView extends View {
         smallCirPaint.setColor(Color.parseColor("#FFFFFF"));
         if(drawDotLists!=null && !drawDotLists.isEmpty()){
         	for(int k=0; k < drawDotLists.size(); k++){	
-        		bigCirPaint.setColor(Color.parseColor(colorArray[k%3]));
+        		bigCirPaint.setColor(colorArray[k%colorArray.length]);
         		for(Dot dot : drawDotLists.get(k)){
                 	canvas.drawCircle(dot.x,dot.y,DOT_OUTER_CIR_RADIUS,bigCirPaint);
                 	canvas.drawCircle(dot.x,dot.y,DOT_INNER_CIR_RADIUS,smallCirPaint);
@@ -386,7 +394,7 @@ public class LineView extends View {
         linePaint.setAntiAlias(true);
         linePaint.setStrokeWidth(MyUtils.dip2px(getContext(), 2));
         for(int k = 0; k<drawDotLists.size(); k ++){
-        	linePaint.setColor(Color.parseColor(colorArray[k%3]));
+        	linePaint.setColor(colorArray[k%colorArray.length]);
 	        for(int i=0; i<drawDotLists.get(k).size()-1; i++){
 	            canvas.drawLine(drawDotLists.get(k).get(i).x,
 	                    drawDotLists.get(k).get(i).y,
