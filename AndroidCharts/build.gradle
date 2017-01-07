@@ -13,7 +13,7 @@ ext {
     siteUrl = '//github.com/HackPlan/AndroidCharts'
     gitUrl = '//github.com/HackPlan/AndroidCharts'
 
-    libraryVersion = '1.0.2'
+    libraryVersion = '1.0.3'
 
     developerId = 'Dacer'
     developerName = 'Ding Wenhao'
@@ -40,7 +40,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         minSdkVersion 14

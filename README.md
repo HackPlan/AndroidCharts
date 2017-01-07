@@ -2,6 +2,9 @@
 
 A simple Android charts library.
 
+##Known Uses in
+* [Pomotodo](https://play.google.com/store/apps/details?id=com.pomotodo)
+
 ##Including in Your Project
 ####Eclipse
 * Import `/AndroidCharts` folder.
@@ -17,7 +20,7 @@ repositories {
 ```
 
 ```groovy
-compile 'im.dacer:AndroidCharts:1.0.2'
+compile 'im.dacer:AndroidCharts:1.0.3'
 ```
 
 ## Usage
@@ -41,7 +44,7 @@ lineView.setDrawDotLine(false); //optional
 lineView.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY); //optional
 LineView.setBottomTextList(strList);
 lineView.setColorArray(new int[]{Color.BLACK,Color.GREEN,Color.GRAY,Color.CYAN});
-LineView.setDataList(dataLists);
+lineView.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
 ```
 
 #### Bar Chart
