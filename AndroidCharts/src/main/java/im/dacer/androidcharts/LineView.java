@@ -52,6 +52,7 @@ public class LineView extends View {
 
 	private Dot pointToSelect;
 	private Dot selectedDot;
+    private int popupBottomPadding = MyUtils.dip2px(getContext(), 2);
 
     private int topLineLength = MyUtils.dip2px(getContext(), 12);; // | | ←this
                                                                    //-+-+-
@@ -345,7 +346,7 @@ public class LineView extends View {
         Rect r = new Rect(x-popupTextRect.width()/2-sidePadding,
                 y - popupTextRect.height()-bottomTriangleHeight-popupTopPadding*2-popupBottomMargin,
                 x + popupTextRect.width()/2+sidePadding,
-                y+popupTopPadding-popupBottomMargin);
+                y+popupTopPadding-popupBottomMargin + popupBottomPadding);
 
         NinePatchDrawable popup = (NinePatchDrawable)getResources().getDrawable(R.drawable.popup_white);
         popup.setColorFilter(new PorterDuffColorFilter(PopupColor, PorterDuff.Mode.MULTIPLY));
@@ -360,7 +361,7 @@ public class LineView extends View {
         Rect r = new Rect(-popupTextRect.width()/2,
                  - popupTextRect.height()-bottomTriangleHeight-popupTopPadding*2-popupBottomMargin,
                  + popupTextRect.width()/2,
-                +popupTopPadding-popupBottomMargin);
+                +popupTopPadding-popupBottomMargin + popupBottomPadding);
         return r.height();
     }
 
