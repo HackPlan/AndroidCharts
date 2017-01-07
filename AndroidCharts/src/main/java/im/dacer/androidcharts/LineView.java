@@ -36,14 +36,12 @@ public class LineView extends View {
     private ArrayList<String> bottomTextList = new ArrayList<String>();
     
     private ArrayList<ArrayList<Integer>> dataLists;
-    private ArrayList<Integer> dataList;
-    
+
     private ArrayList<Integer> xCoordinateList = new ArrayList<Integer>();
     private ArrayList<Integer> yCoordinateList = new ArrayList<Integer>();
     
     private ArrayList<ArrayList<Dot>> drawDotLists = new ArrayList<ArrayList<Dot>>();
-    private ArrayList<Dot> drawDotList = new ArrayList<Dot>();
-    
+
     private Paint bottomTextPaint = new Paint();
     private int bottomTextDescent;
 
@@ -139,7 +137,6 @@ public class LineView extends View {
      * @param bottomTextList The String ArrayList in the bottom.
      */
     public void setBottomTextList(ArrayList<String> bottomTextList){
-        this.dataList = null;
         this.bottomTextList = bottomTextList;
 
         Rect r = new Rect();
