@@ -83,9 +83,7 @@ public class LineView extends View {
 		this.showPopupType = popupType;
 	}
 
-	//점선표시
     private Boolean drawDotLine = false;
-    //라인컬러
     private int[] colorArray = {Color.parseColor("#e74c3c"),Color.parseColor("#2980b9"),Color.parseColor("#1abc9c")};
 
     // onDraw optimisations
@@ -270,10 +268,8 @@ public class LineView extends View {
                     int x = xCoordinateList.get(i);
                     int y = yCoordinateList.get(verticalGridNum - dataLists.get(k).get(i));
                     if(i>drawDotSize-1){
-                    	//도트리스트를 추가한다.
                         drawDotLists.get(k).add(new Dot(x, 0, x, y, dataLists.get(k).get(i),k));
                     }else{
-                    	//도트리스트에 타겟을 설정한다.
                         drawDotLists.get(k).set(i, drawDotLists.get(k).get(i).setTargetData(x,y,dataLists.get(k).get(i),k));
                     }
                 }
@@ -323,7 +319,7 @@ public class LineView extends View {
         		}
         	}
         }
-// 선택한 dot 만 popup 이 뜨게 한다.        
+
         if(showPopup && selectedDot != null){
             drawPopup(canvas,
                     String.valueOf(selectedDot.data),
@@ -371,7 +367,6 @@ public class LineView extends View {
         return r.height();
     }
 
-    //도트그리기
     private void drawDots(Canvas canvas){
         Paint bigCirPaint = new Paint();
         bigCirPaint.setAntiAlias(true);
@@ -388,7 +383,6 @@ public class LineView extends View {
         }
     }
 
-    //선그리기
     private void drawLines(Canvas canvas){
         Paint linePaint = new Paint();
         linePaint.setAntiAlias(true);
