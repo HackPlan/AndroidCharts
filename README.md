@@ -2,16 +2,19 @@
 
 A simple Android charts library.
 
-##Known Uses in
+## Known Uses in
+
 * [Pomotodo](https://play.google.com/store/apps/details?id=com.pomotodo)
 
-##Including in Your Project
-####Eclipse
+## Including in Your Project
+
+#### Eclipse
+
 * Import `/AndroidCharts` folder.
 * Move `/java` folder to `/src` folder.
 * `mkdir libs`, copy `android-support-v4.jar` to `/libs`.
 
-####Gradle
+#### Gradle
 
 ```groovy
 repositories {
@@ -24,6 +27,7 @@ compile 'im.dacer:AndroidCharts:1.0.3'
 ```
 
 ## Usage
+
 #### Line Chart
 
 ![Line Chart](https://raw.github.com/dacer/AndroidCharts/master/pic/line.png)
