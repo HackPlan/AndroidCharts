@@ -5,6 +5,7 @@ A simple Android charts library.
 ## Known Uses in
 
 * [Pomotodo](https://play.google.com/store/apps/details?id=com.pomotodo)
+* [SoulissApp](https://play.google.com/store/apps/details?id=it.angelic.soulissclient)
 
 ## Including in Your Project
 
