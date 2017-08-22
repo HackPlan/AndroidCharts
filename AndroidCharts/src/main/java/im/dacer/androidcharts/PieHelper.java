@@ -33,7 +33,7 @@ public class PieHelper {
      * @param percent from 0 to 100
      * @param title
      */
-    PieHelper(float percent, String title){
+    public PieHelper(float percent, String title){
         this(percent, title, 0);
     }
 
@@ -43,14 +43,14 @@ public class PieHelper {
      * @param title
      * @param color
      */
-    PieHelper(float percent, String title, int color){
+   public PieHelper(float percent, String title, int color){
         this.sweepDegree = percent * 360 / 100;
         this.title = title;
         this.color = color;
     }
 
 
-    PieHelper(float startDegree, float endDegree, PieHelper targetPie){
+      PieHelper(float startDegree, float endDegree, PieHelper targetPie){
         this.startDegree = startDegree;
         this.endDegree = endDegree;
         targetStartDegree = targetPie.getStartDegree();
