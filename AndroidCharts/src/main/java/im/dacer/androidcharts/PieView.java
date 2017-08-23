@@ -80,7 +80,7 @@ public class PieView extends View {
         textPaint = new Paint();
         textPaint.setAntiAlias(true);
         textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(MyUtils.sp2px(getContext(), 13));
+        textPaint.setTextSize(MyUtils.sp2px(getContext(), 9));
         textPaint.setStrokeWidth(5);
         textPaint.setTextAlign(Paint.Align.CENTER);
         pieCenterPoint = new Point();
@@ -158,6 +158,7 @@ public class PieView extends View {
             }
             canvas.drawArc(rect, pieHelper.getStartDegree(), pieHelper.getSweep(), true, cirPaint);
             drawPercentText(canvas, pieHelper);
+            drawText(canvas,pieHelper);
 
             drawLineBesideCir(canvas, pieHelper.getStartDegree(), selected);
             drawLineBesideCir(canvas, pieHelper.getEndDegree(), selected);
@@ -186,6 +187,7 @@ public class PieView extends View {
         }
         float x = (float)(mViewHeight/2 + Math.cos(Math.toRadians(-angel)) * pieRadius/2);
         float y = (float)(mViewHeight/2 + sth * Math.abs(Math.sin(Math.toRadians(-angel))) * pieRadius/2);
+        y=y+17f;
         canvas.drawText(pieHelper.getPercentStr(), x, y, textPaint);
     }
 
@@ -198,6 +200,8 @@ public class PieView extends View {
         }
         float x = (float)(mViewHeight/2 + Math.cos(Math.toRadians(-angel)) * pieRadius/2);
         float y = (float)(mViewHeight/2 + sth * Math.abs(Math.sin(Math.toRadians(-angel))) * pieRadius/2);
+        y=y+17f;
+        
         canvas.drawText(pieHelper.getTitle(), x, y, textPaint);
     }
 
