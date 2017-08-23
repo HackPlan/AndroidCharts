@@ -158,6 +158,7 @@ public class PieView extends View {
             }
             canvas.drawArc(rect, pieHelper.getStartDegree(), pieHelper.getSweep(), true, cirPaint);
             drawPercentText(canvas, pieHelper);
+            drawText(canvas,pieHelper);
 
             drawLineBesideCir(canvas, pieHelper.getStartDegree(), selected);
             drawLineBesideCir(canvas, pieHelper.getEndDegree(), selected);
