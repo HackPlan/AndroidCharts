@@ -199,7 +199,8 @@ public class PieView extends View {
         }
         float x = (float)(mViewHeight/2 + Math.cos(Math.toRadians(-angel)) * pieRadius/2);
         float y = (float)(mViewHeight/2 + sth * Math.abs(Math.sin(Math.toRadians(-angel))) * pieRadius/2);
-        y=y+50;
+        y=y+50f;
+        
         canvas.drawText(pieHelper.getTitle(), x, y, textPaint);
     }
 
