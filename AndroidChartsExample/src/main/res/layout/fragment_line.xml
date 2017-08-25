@@ -1,40 +1,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    >
 
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollViewFloat"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/horizontalScrollViewFloat"
+        android:layout_above="@+id/horizontalScrollView"
         android:layout_alignParentRight="true"
-        android:layout_above="@+id/horizontalScrollView">
+        >
         <view
+            class="im.dacer.androidcharts.LineView"
+            android:id="@+id/line_view_float"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
-            class="im.dacer.androidcharts.LineView"
-            android:id="@+id/line_view_float"/>
+            />
     </HorizontalScrollView>
 
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/horizontalScrollView"
+        android:layout_above="@+id/line_button"
         android:layout_alignParentRight="true"
-        android:layout_above="@+id/line_button">
+        >
         <view
+            class="im.dacer.androidcharts.LineView"
+            android:id="@+id/line_view"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
-            class="im.dacer.androidcharts.LineView"
-            android:id="@+id/line_view"/>
+            />
     </HorizontalScrollView>
 
     <Button
+        android:id="@+id/line_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Random"
-        android:id="@+id/line_button"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="Random"
+        />
 
 </RelativeLayout>

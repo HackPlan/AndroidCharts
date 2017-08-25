@@ -2,8 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     android:choiceMode="singleChoice"
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
-    android:background="#000000"
-    tools:context="com.dacer.androidchartsexample.NavigationDrawerFragment" />
+    tools:context="com.dacer.androidchartsexample.NavigationDrawerFragment"
+    />

@@ -1,11 +1,11 @@
 package im.dacer.androidcharts;
 
-
 /**
  * Created by Dacer on 11/14/13.
  */
 public class PieHelper {
 
+    int velocity = 5;
     private float startDegree;
     private float endDegree;
     private float targetStartDegree;
@@ -14,43 +14,34 @@ public class PieHelper {
     private int color;
     private float sweepDegree;
 
-    int velocity = 5;
-
     /**
-     *
      * @param percent from 0 to 100
      */
-    public PieHelper(float percent){
+    public PieHelper(float percent) {
         this(percent, null, 0);
     }
 
-    public PieHelper(float percent, int color){
+    public PieHelper(float percent, int color) {
         this(percent, null, color);
     }
 
     /**
-     *
      * @param percent from 0 to 100
-     * @param title
      */
-    PieHelper(float percent, String title){
+    PieHelper(float percent, String title) {
         this(percent, title, 0);
     }
 
     /**
-     *
      * @param percent from 0 to 100
-     * @param title
-     * @param color
      */
-    PieHelper(float percent, String title, int color){
+    PieHelper(float percent, String title, int color) {
         this.sweepDegree = percent * 360 / 100;
         this.title = title;
         this.color = color;
     }
 
-
-    PieHelper(float startDegree, float endDegree, PieHelper targetPie){
+    PieHelper(float startDegree, float endDegree, PieHelper targetPie) {
         this.startDegree = startDegree;
         this.endDegree = endDegree;
         targetStartDegree = targetPie.getStartDegree();
@@ -60,7 +51,7 @@ public class PieHelper {
         this.color = targetPie.getColor();
     }
 
-    PieHelper setTarget(PieHelper targetPie){
+    PieHelper setTarget(PieHelper targetPie) {
         this.targetStartDegree = targetPie.getStartDegree();
         this.targetEndDegree = targetPie.getEndDegree();
         this.title = targetPie.getTitle();
@@ -69,53 +60,57 @@ public class PieHelper {
         return this;
     }
 
-    void setDegree(float startDegree, float endDegree){
+    void setDegree(float startDegree, float endDegree) {
         this.startDegree = startDegree;
         this.endDegree = endDegree;
     }
 
-    boolean isColorSetted(){return color != 0;}
-
-    boolean isAtRest(){
-        return (startDegree==targetStartDegree)&&(endDegree==targetEndDegree);
+    boolean isColorSetted() {
+        return color != 0;
     }
 
-    void update(){
+    boolean isAtRest() {
+        return (startDegree == targetStartDegree) && (endDegree == targetEndDegree);
+    }
+
+    void update() {
         this.startDegree = updateSelf(startDegree, targetStartDegree, velocity);
         this.endDegree = updateSelf(endDegree, targetEndDegree, velocity);
         this.sweepDegree = endDegree - startDegree;
     }
 
-    String getPercentStr(){
+    String getPercentStr() {
         float percent = sweepDegree / 360 * 100;
-        return String.valueOf((int)percent) + "%";
+        return String.valueOf((int) percent) + "%";
     }
 
-    public int getColor(){ return color; }
+    public int getColor() {
+        return color;
+    }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
-    public float getSweep(){
+    public float getSweep() {
         return sweepDegree;
     }
 
-    public float getStartDegree(){
+    public float getStartDegree() {
         return startDegree;
     }
 
-    public float getEndDegree(){
+    public float getEndDegree() {
         return endDegree;
     }
 
-    private float updateSelf(float origin, float target, int velocity){
+    private float updateSelf(float origin, float target, int velocity) {
         if (origin < target) {
             origin += velocity;
-        } else if (origin > target){
-            origin-= velocity;
+        } else if (origin > target) {
+            origin -= velocity;
         }
-        if(Math.abs(target-origin)<velocity){
+        if (Math.abs(target - origin) < velocity) {
             origin = target;
         }
         return origin;
