@@ -39,7 +39,7 @@ public class PieView extends View {
     private int selectedIndex = NO_SELECTED_INDEX;
 
     private boolean showPercentLabel = true;
-    public static final int NO_SELECTED_INDEX = -999;
+    public static final int NO_SELECTED_INDEX = -1;
     private final int[] DEFAULT_COLOR_LIST = {Color.parseColor("#33B5E5"),
             Color.parseColor("#AA66CC"),
             Color.parseColor("#99CC00"),
@@ -203,8 +203,13 @@ public class PieView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN ||event.getAction() == MotionEvent.ACTION_MOVE){
-            selectedIndex = findPointAt((int) event.getX(), (int) event.getY());
+        if (event.getAction() == MotionEvent.ACTION_UP){
+            int clickedIndex = findPointAt((int) event.getX(), (int) event.getY());
+            if (clickedIndex == selectedIndex) {
+                selectedIndex = NO_SELECTED_INDEX;
+            } else {
+                selectedIndex = clickedIndex;
+            }
             if(onPieClickListener != null){
                 onPieClickListener.onPieClick(selectedIndex);
             }
