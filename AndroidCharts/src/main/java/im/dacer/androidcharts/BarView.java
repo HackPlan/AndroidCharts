@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
+
 import java.util.ArrayList;
 
 /**
@@ -16,9 +17,9 @@ public class BarView extends View {
     private final int MINI_BAR_WIDTH;
     private final int BAR_SIDE_MARGIN;
     private final int TEXT_TOP_MARGIN;
-    private final int TEXT_COLOR = Color.parseColor("#9B9A9B");
-    private final int BACKGROUND_COLOR = Color.parseColor("#F6F6F6");
-    private final int FOREGROUND_COLOR = Color.parseColor("#FC496D");
+    private int TEXT_COLOR = Color.parseColor("#9B9A9B");
+    private int BACKGROUND_COLOR = Color.parseColor("#F6F6F6");
+    private int FOREGROUND_COLOR = Color.parseColor("#FC496D");
     private ArrayList<Float> percentList;
     private ArrayList<Float> targetPercentList;
     private Paint textPaint;
@@ -32,7 +33,8 @@ public class BarView extends View {
     private int bottomTextHeight;
     private ArrayList<String> bottomTextList = new ArrayList<String>();
     private Runnable animator = new Runnable() {
-        @Override public void run() {
+        @Override
+        public void run() {
             boolean needNewFrame = false;
             for (int i = 0; i < targetPercentList.size(); i++) {
                 if (percentList.get(i) < targetPercentList.get(i)) {
@@ -134,7 +136,8 @@ public class BarView extends View {
         post(animator);
     }
 
-    @Override protected void onDraw(Canvas canvas) {
+    @Override
+    protected void onDraw(Canvas canvas) {
         int i = 1;
         if (percentList != null && !percentList.isEmpty()) {
             for (Float f : percentList) {
@@ -171,7 +174,8 @@ public class BarView extends View {
         }
     }
 
-    @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int mViewWidth = measureWidth(widthMeasureSpec);
         int mViewHeight = measureHeight(heightMeasureSpec);
         setMeasuredDimension(mViewWidth, mViewHeight);
@@ -205,5 +209,20 @@ public class BarView extends View {
                 break;
         }
         return measurement;
+    }
+
+    public void setBarColorEmptyPart(int color) {
+        BACKGROUND_COLOR = color;
+        bgPaint.setColor(color);
+    }
+
+    public void setBarColorValuePart(int color) {
+        FOREGROUND_COLOR = color;
+        fgPaint.setColor(color);
+    }
+
+    public void setTextColor(int color) {
+        TEXT_COLOR = color;
+        textPaint.setColor(color);
     }
 }

@@ -1,25 +1,33 @@
 package com.dacer.androidchartsexample;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import im.dacer.androidcharts.BarView;
+
 import java.util.ArrayList;
+
+import im.dacer.androidcharts.BarView;
 
 /**
  * Created by Dacer on 11/15/13.
  */
 public class BarFragment extends Fragment {
-    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_bar, container, false);
         final BarView barView = (BarView) rootView.findViewById(R.id.bar_view);
+        // barView.setBarColorEmptyPart(Color.parseColor("#4CAF50"));
+        barView.setBarColorValuePart(Color.parseColor("#4CAF50"));
+        barView.setTextColor(Color.parseColor("#009688"));
         Button button = (Button) rootView.findViewById(R.id.bar_button);
         button.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 randomSet(barView);
             }
         });
