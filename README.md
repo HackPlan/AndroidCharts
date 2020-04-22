@@ -46,7 +46,7 @@ compile 'im.dacer:AndroidCharts:1.0.4'
 LineView lineView = (LineView)findViewById(R.id.line_view);
 lineView.setDrawDotLine(false); //optional
 lineView.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY); //optional
-LineView.setBottomTextList(strList);
+lineView.setBottomTextList(strList);
 lineView.setColorArray(new int[]{Color.BLACK,Color.GREEN,Color.GRAY,Color.CYAN});
 lineView.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
 ```
