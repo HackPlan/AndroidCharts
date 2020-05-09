@@ -13,6 +13,7 @@ A simple Android charts library.
 * Import `/AndroidCharts` folder.
 * Move `/java` folder to `/src` folder.
 * `mkdir libs`, copy `android-support-v4.jar` to `/libs`.
+* Code : https://github.com/dharmik/AndroidCharts
 
 #### Gradle
 
