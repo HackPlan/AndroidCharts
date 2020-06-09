@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dacer on 9/26/14.
@@ -85,7 +86,7 @@ public class PieView extends View {
         onPieClickListener = listener;
     }
 
-    public void setDate(ArrayList<PieHelper> helperList) {
+    public void setDate(List<PieHelper> helperList) {
         initPies(helperList);
         pieHelperList.clear();
         removeSelectedPie();
@@ -110,7 +111,7 @@ public class PieView extends View {
     /**
      * Set startDegree and endDegree for each PieHelper
      */
-    private void initPies(ArrayList<PieHelper> helperList) {
+    private void initPies(List<PieHelper> helperList) {
         float totalAngel = 270;
         for (PieHelper pie : helperList) {
             pie.setDegree(totalAngel, totalAngel + pie.getSweep());

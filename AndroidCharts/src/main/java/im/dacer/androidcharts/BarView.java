@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dacer on 11/11/13.
@@ -19,8 +20,8 @@ public class BarView extends View {
     private final int TEXT_COLOR = Color.parseColor("#9B9A9B");
     private final int BACKGROUND_COLOR = Color.parseColor("#F6F6F6");
     private final int FOREGROUND_COLOR = Color.parseColor("#FC496D");
-    private ArrayList<Float> percentList;
-    private ArrayList<Float> targetPercentList;
+    private List<Float> percentList;
+    private List<Float> targetPercentList;
     private Paint textPaint;
     private Paint bgPaint;
     private Paint fgPaint;
@@ -30,7 +31,7 @@ public class BarView extends View {
     private boolean autoSetWidth = true;
     private int topMargin;
     private int bottomTextHeight;
-    private ArrayList<String> bottomTextList = new ArrayList<String>();
+    private List<String> bottomTextList = new ArrayList<String>();
     private Runnable animator = new Runnable() {
         @Override public void run() {
             boolean needNewFrame = false;
@@ -82,9 +83,9 @@ public class BarView extends View {
     /**
      * dataList will be reset when called is method.
      *
-     * @param bottomStringList The String ArrayList in the bottom.
+     * @param bottomStringList The String List in the bottom.
      */
-    public void setBottomTextList(ArrayList<String> bottomStringList) {
+    public void setBottomTextList(List<String> bottomStringList) {
         //        this.dataList = null;
         this.bottomTextList = bottomStringList;
         Rect r = new Rect();
@@ -107,9 +108,9 @@ public class BarView extends View {
     }
 
     /**
-     * @param list The ArrayList of Integer with the range of [0-max].
+     * @param list The List of Integer with the range of [0-max].
      */
-    public void setDataList(ArrayList<Integer> list, int max) {
+    public void setDataList(List<Integer> list, int max) {
         targetPercentList = new ArrayList<Float>();
         if (max == 0) max = 1;
 

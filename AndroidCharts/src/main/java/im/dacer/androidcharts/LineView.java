@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Dacer on 11/4/13.
@@ -48,11 +49,11 @@ public class LineView extends View {
     private boolean autoSetGridWidth = true;
     private int dataOfAGird = 10;
     private int bottomTextHeight = 0;
-    private ArrayList<String> bottomTextList = new ArrayList<String>();
-    private ArrayList<ArrayList<Float>> dataLists;
-    private ArrayList<Integer> xCoordinateList = new ArrayList<Integer>();
-    private ArrayList<Integer> yCoordinateList = new ArrayList<Integer>();
-    private ArrayList<ArrayList<Dot>> drawDotLists = new ArrayList<ArrayList<Dot>>();
+    private List<String> bottomTextList = new ArrayList<String>();
+    private List<ArrayList<Float>> dataLists;
+    private List<Integer> xCoordinateList = new ArrayList<Integer>();
+    private List<Integer> yCoordinateList = new ArrayList<Integer>();
+    private List<ArrayList<Dot>> drawDotLists = new ArrayList<ArrayList<Dot>>();
     private Paint bottomTextPaint = new Paint();
     private int bottomTextDescent;
     private Paint popupTextPaint = new Paint();
@@ -128,9 +129,9 @@ public class LineView extends View {
     /**
      * dataList will be reset when called is method.
      *
-     * @param bottomTextList The String ArrayList in the bottom.
+     * @param bottomTextList The String List in the bottom.
      */
-    public void setBottomTextList(ArrayList<String> bottomTextList) {
+    public void setBottomTextList(List<String> bottomTextList) {
         this.bottomTextList = bottomTextList;
 
         Rect r = new Rect();
@@ -165,14 +166,14 @@ public class LineView extends View {
     }
 
     /**
-     * @param dataLists The Float ArrayLists for showing,
+     * @param dataLists The Float Lists for showing,
      * dataList.size() must be smaller than bottomTextList.size()
      */
-    public void setFloatDataList(ArrayList<ArrayList<Float>> dataLists) {
+    public void setFloatDataList(List<ArrayList<Float>> dataLists) {
         setFloatDataList(dataLists, true);
     }
 
-    public void setDataList(ArrayList<ArrayList<Integer>> dataLists) {
+    public void setDataList(List<ArrayList<Integer>> dataLists) {
         ArrayList<ArrayList<Float>> newList = new ArrayList<>();
         for (ArrayList<Integer> list : dataLists) {
             ArrayList<Float> tempList = new ArrayList<>();
@@ -184,7 +185,7 @@ public class LineView extends View {
         setFloatDataList(newList, false);
     }
 
-    public void setFloatDataList(ArrayList<ArrayList<Float>> dataLists,
+    public void setFloatDataList(List<ArrayList<Float>> dataLists,
             boolean showFloatNumInPopup) {
         selectedDot = null;
         this.showFloatNumInPopup = showFloatNumInPopup;
