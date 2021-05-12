@@ -50,8 +50,8 @@ public class LineView extends View {
     private int bottomTextHeight = 0;
     private ArrayList<String> bottomTextList = new ArrayList<String>();
     private ArrayList<ArrayList<Float>> dataLists;
-    private ArrayList<Integer> xCoordinateList = new ArrayList<Integer>();
-    private ArrayList<Integer> yCoordinateList = new ArrayList<Integer>();
+    private ArrayList<Double> xCoordinateList = new ArrayList<Double>();
+    private ArrayList<Double> yCoordinateList = new ArrayList<Double>();
     private ArrayList<ArrayList<Dot>> drawDotLists = new ArrayList<ArrayList<Dot>>();
     private Paint bottomTextPaint = new Paint();
     private int bottomTextDescent;
@@ -275,7 +275,7 @@ public class LineView extends View {
                 int drawDotSize = drawDotLists.get(k).isEmpty() ? 0 : drawDotLists.get(k).size();
 
                 for (int i = 0; i < dataLists.get(k).size(); i++) {
-                    int x = xCoordinateList.get(i);
+                    double x = xCoordinateList.get(i);
                     float y = getYAxesOf(dataLists.get(k).get(i), verticalGridNum);
                     if (i > drawDotSize - 1) {
                         drawDotLists.get(k).add(new Dot(x, 0, x, y, dataLists.get(k).get(i), k));
@@ -519,7 +519,7 @@ public class LineView extends View {
 
         for (ArrayList<Dot> data : drawDotLists) {
             for (Dot dot : data) {
-                final int pointX = dot.x;
+                final int pointX = (int) dot.x;
                 final int pointY = (int) dot.y;
 
                 r.set(pointX - width, pointY - width, pointX + width, pointY + width);
@@ -536,12 +536,12 @@ public class LineView extends View {
         int x;
         float y;
         float data;
-        int targetX;
+        double targetX;
         float targetY;
         int linenumber;
         int velocity = MyUtils.dip2px(getContext(), 18);
 
-        Dot(int x, float y, int targetX, float targetY, float data, int linenumber) {
+        Dot(double x, float y, double targetX, float targetY, float data, int linenumber) {
             this.x = x;
             this.y = y;
             this.linenumber = linenumber;
@@ -553,7 +553,7 @@ public class LineView extends View {
             return point;
         }
 
-        Dot setTargetData(int targetX, float targetY, float data, int linenumber) {
+        Dot setTargetData(double targetX, float targetY, float data, int linenumber) {
             this.targetX = targetX;
             this.targetY = targetY;
             this.data = data;
@@ -566,7 +566,7 @@ public class LineView extends View {
         }
 
         void update() {
-            x = (int) updateSelf(x, targetX, velocity);
+            x = updateSelf(x, targetX, velocity);
             y = updateSelf(y, targetY, velocity);
         }
 
